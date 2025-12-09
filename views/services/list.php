@@ -1,6 +1,4 @@
 <?php
-// views/services/list.php
-require_once '../../config/database.php';
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -17,7 +15,7 @@ $services = [];
 if ($role === 'pelanggan') {
     // Ambil service berdasarkan perangkat pelanggan
     $stmt = $pdo->prepare("
-        SELECT s.id_service, s.keluhan, s.tanggal_masuk, s.tanggal_selesai, s.biaya_akhir, sp.nama_status, d.jenis_perangkat, d.merek, d.model
+        SELECT s.id_service, s.keluhan, s.tanggal_masuk, s.tanggal_selesai, s.biaya_service, sp.nama_status, d.jenis_perangkat, d.merek, d.model
         FROM service s
         JOIN perangkat d ON s.id_perangkat = d.id_perangkat
         JOIN status_perbaikan sp ON s.id_status = sp.id_status
@@ -29,7 +27,7 @@ if ($role === 'pelanggan') {
 } elseif ($role === 'teknisi') {
     // Ambil service yang ditugaskan ke teknisi ini
     $stmt = $pdo->prepare("
-        SELECT s.id_service, s.keluhan, s.tanggal_masuk, s.tanggal_selesai, s.biaya_akhir, sp.nama_status, p.nama as nama_pelanggan, d.jenis_perangkat, d.merek, d.model
+        SELECT s.id_service, s.keluhan, s.tanggal_masuk, s.tanggal_selesai, s.biaya_service, sp.nama_status, p.nama as nama_pelanggan, d.jenis_perangkat, d.merek, d.model
         FROM service s
         JOIN perangkat d ON s.id_perangkat = d.id_perangkat
         JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan
@@ -106,7 +104,7 @@ if ($role === 'pelanggan') {
                         "><?= htmlspecialchars($service['nama_status']) ?></td>
                         <td><?= htmlspecialchars($service['tanggal_masuk']) ?></td>
                         <td><?= htmlspecialchars($service['tanggal_selesai'] ?? 'Belum selesai') ?></td>
-                        <td>Rp <?= number_format($service['biaya_akhir'] ?? 0, 0, ',', '.') ?></td>
+                        <td>Rp <?= number_format($service['biaya_service'] ?? 0, 0, ',', '.') ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
