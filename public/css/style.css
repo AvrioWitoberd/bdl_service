@@ -1,0 +1,17 @@
+/* public/css/style.css */
+body { font-family: Arial, sans-serif; margin: 20px; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th { background-color: #f2f2f2; }
+.pagination { margin-top: 20px; }
+.pagination a { padding: 8px 16px; text-decoration: none; border: 1px solid #ddd; margin: 0 4px; }
+.pagination a.active { background-color: #4CAF50; color: white; border: 1px solid #4CAF50; }
+.stats { background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+form { background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+input[type="text"], input[type="email"], input[type="number"], input[type="date"], select, textarea { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
+input[type="submit"], button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+input[type="submit"]:hover, button:hover { background-color: #45a049; }
+a { color: #007bff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+nav { margin-bottom: 20px; }
+nav a { margin-right: 15px; }
