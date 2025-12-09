@@ -1,38 +1,80 @@
 <?php
 // views/dashboard.php
-require_once '../config/database.php';
 session_start();
 
+// Ambil koneksi (harus ditangkap return-nya)
+$pdo = require_once __DIR__ . '/../config/database.php';
+
+if (!$pdo) {
+    die("Koneksi database gagal.");
+}
+
+// Proteksi halaman
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../auth/login.php");
     exit;
 }
 
-$pdo = require_once '../config/database.php';
+/* ================================
+   QUERY DIPERBAIKI SESUAI DB KAMU
+   Status selesai = '6,006'
+   ================================ */
 
-// Ambil statistik
-$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM service WHERE id_status != (SELECT id_status FROM status_perbaikan WHERE nama_status = 'Selesai')");
-$stmt->execute();
-$pending_count = $stmt->fetch()['total'];
-
-$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM service WHERE id_status = (SELECT id_status FROM status_perbaikan WHERE nama_status = 'Selesai')");
-$stmt->execute();
-$completed_count = $stmt->fetch()['total'];
-
-$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM pelanggan");
-$stmt->execute();
-$customer_count = $stmt->fetch()['total'];
-
-$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM teknisi WHERE status_aktif = TRUE");
-$stmt->execute();
-$technician_count = $stmt->fetch()['total'];
-
-// Ambil 5 service terbaru
+// Service Pending
 $stmt = $pdo->prepare("
-    SELECT s.id_service, s.keluhan, s.tanggal_masuk, sp.nama_status, p.nama as nama_pelanggan, d.jenis_perangkat, d.merek, d.model
+    SELECT COUNT(*) AS total
+    FROM service
+    WHERE id_status <> (
+        SELECT id_status 
+        FROM status_perbaikan 
+        WHERE nama_status = 'Selesai Diperbaiki'
+    )
+");
+$stmt->execute();
+$pending_count = $stmt->fetch()['total'] ?? 0;
+
+// Service Selesai
+$stmt = $pdo->prepare("
+    SELECT COUNT(*) AS total
+    FROM service
+    WHERE id_status = (
+        SELECT id_status 
+        FROM status_perbaikan 
+        WHERE nama_status = 'Selesai Diperbaiki'
+    )
+");
+$stmt->execute();
+$completed_count = $stmt->fetch()['total'] ?? 0;
+
+
+// Total pelanggan
+$stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM pelanggan");
+$stmt->execute();
+$customer_count = $stmt->fetch()['total'] ?? 0;
+
+// Teknisi aktif
+$stmt = $pdo->prepare("
+    SELECT COUNT(*) AS total 
+    FROM teknisi 
+    WHERE status_aktif = 'true' OR status_aktif = true
+");
+$stmt->execute();
+$technician_count = $stmt->fetch()['total'] ?? 0;
+
+// Ambil 5 service terbaru (DISESUAIKAN DENGAN STRUKTUR KAMU)
+$stmt = $pdo->prepare("
+    SELECT 
+        s.id_service, 
+        s.keluhan, 
+        s.tanggal_masuk, 
+        sp.nama_status, 
+        p.nama AS nama_pelanggan, 
+        d.jenis_perangkat, 
+        d.merek,
+        d.nama_perangkat
     FROM service s
     JOIN perangkat d ON s.id_perangkat = d.id_perangkat
-    JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan
+    JOIN pelanggan p ON s.id_pelanggan = p.id_pelanggan
     JOIN status_perbaikan sp ON s.id_status = sp.id_status
     ORDER BY s.tanggal_masuk DESC
     LIMIT 5
@@ -40,6 +82,7 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $recent_services = $stmt->fetchAll();
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -104,7 +147,10 @@ $recent_services = $stmt->fetchAll();
                     <tr>
                         <td><?= htmlspecialchars($service['id_service']) ?></td>
                         <td><?= htmlspecialchars($service['nama_pelanggan']) ?></td>
-                        <td><?= htmlspecialchars($service['jenis_perangkat']) ?> <?= htmlspecialchars($service['merek']) ?> <?= htmlspecialchars($service['model']) ?></td>
+                        <td>
+                        <?= htmlspecialchars($service['nama_perangkat']) ?> - 
+                        <?= htmlspecialchars($service['merek']) ?>
+                        </td>
                         <td><?= htmlspecialchars($service['keluhan']) ?></td>
                         <td><?= htmlspecialchars($service['nama_status']) ?></td>
                         <td><?= htmlspecialchars($service['tanggal_masuk']) ?></td>

@@ -15,26 +15,45 @@ $services = [];
 if ($role === 'pelanggan') {
     // Ambil service berdasarkan perangkat pelanggan
     $stmt = $pdo->prepare("
-        SELECT s.id_service, s.keluhan, s.tanggal_masuk, s.tanggal_selesai, s.biaya_service, sp.nama_status, d.jenis_perangkat, d.merek, d.model
-        FROM service s
-        JOIN perangkat d ON s.id_perangkat = d.id_perangkat
-        JOIN status_perbaikan sp ON s.id_status = sp.id_status
-        WHERE d.id_pelanggan = ?
-        ORDER BY s.tanggal_masuk DESC
-    ");
+    SELECT 
+        s.id_service, 
+        s.keluhan, 
+        s.tanggal_masuk, 
+        s.tanggal_selesai, 
+        s.biaya_service, 
+        sp.nama_status, 
+        d.nama_perangkat,
+        d.jenis_perangkat, 
+        d.merek
+    FROM service s
+    JOIN perangkat d ON s.id_perangkat = d.id_perangkat
+    JOIN status_perbaikan sp ON s.id_status = sp.id_status
+    WHERE d.id_pelanggan = ?
+    ORDER BY s.tanggal_masuk DESC
+");
     $stmt->execute([$user_id]);
     $services = $stmt->fetchAll();
 } elseif ($role === 'teknisi') {
     // Ambil service yang ditugaskan ke teknisi ini
     $stmt = $pdo->prepare("
-        SELECT s.id_service, s.keluhan, s.tanggal_masuk, s.tanggal_selesai, s.biaya_service, sp.nama_status, p.nama as nama_pelanggan, d.jenis_perangkat, d.merek, d.model
-        FROM service s
-        JOIN perangkat d ON s.id_perangkat = d.id_perangkat
-        JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan
-        JOIN status_perbaikan sp ON s.id_status = sp.id_status
-        WHERE s.id_teknisi = ?
-        ORDER BY s.tanggal_masuk DESC
-    ");
+    SELECT 
+        s.id_service, 
+        s.keluhan, 
+        s.tanggal_masuk, 
+        s.tanggal_selesai, 
+        s.biaya_service, 
+        sp.nama_status, 
+        p.nama AS nama_pelanggan, 
+        d.nama_perangkat,
+        d.jenis_perangkat, 
+        d.merek
+    FROM service s
+    JOIN perangkat d ON s.id_perangkat = d.id_perangkat
+    JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan
+    JOIN status_perbaikan sp ON s.id_status = sp.id_status
+    WHERE s.id_teknisi = ?
+    ORDER BY s.tanggal_masuk DESC
+");
     $stmt->execute([$user_id]);
     $services = $stmt->fetchAll();
 } else {
@@ -63,7 +82,7 @@ if ($role === 'pelanggan') {
 </head>
 <body>
     <!-- 🔁 Ganti path include header jadi sesuai struktur lo -->
-    <?php include '../views/partials/header.php'; ?>
+    <?php include '../partials/header.php'; ?>
     <div class="container">
         <h1>Daftar Service Saya</h1>
 
@@ -86,7 +105,10 @@ if ($role === 'pelanggan') {
                     <?php foreach ($services as $service): ?>
                     <tr>
                         <td><?= htmlspecialchars($service['id_service']) ?></td>
-                        <td><?= htmlspecialchars($service['jenis_perangkat']) ?> <?= htmlspecialchars($service['merek']) ?> <?= htmlspecialchars($service['model']) ?></td>
+                        <td>
+                            <?= htmlspecialchars($service['nama_perangkat']) ?> -
+                            <?= htmlspecialchars($service['merek']) ?>
+                        </td>
                         <td><?= htmlspecialchars($service['keluhan']) ?></td>
                         <td class="
                             <?php 

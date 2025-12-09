@@ -437,7 +437,21 @@ session_start();
             <?php if (!isset($_SESSION['user_id'])): ?>
                 <li><a href="views/auth/login.php" style="color: var(--primary); font-weight: bold;">Login</a></li>
             <?php else: ?>
-                <li><a href="views/dashboard.php">Dashboard (<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>)</a></li>
+                <?php
+                $dashboard_link = '#';
+
+                if ($_SESSION['role'] === 'admin') {
+                    $dashboard_link = 'views/dashboard.php';
+                } elseif ($_SESSION['role'] === 'teknisi') {
+                    $dashboard_link = 'views/services/list.php';
+                } elseif ($_SESSION['role'] === 'pelanggan') {
+                    $dashboard_link = 'views/services/list.php';
+                }
+                ?>
+                <li>
+                    <a href="<?= $dashboard_link ?>">Dashboard (<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>)</a>
+                </li>
+
                 <li><a href="controllers/AuthController.php?action=logout" style="color: #ef4444;">Logout</a></li>
             <?php endif; ?>
             <li><a href="views/services/track_public.php">Track Service</a></li>
