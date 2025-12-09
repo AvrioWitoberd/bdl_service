@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict W9NcCyGPcDFSbbH8zcXyRoY1GlBzjVsUle5vRfyaGiuDaN6BnWTPd89lffLEIgo
+\restrict XFEmFekbzFHyCEIUUPj8sTWeddaB7YDfd5gQ7TtPYeef3r0VeITvxGL805Kb8C0
 
 -- Dumped from database version 18.0
 -- Dumped by pg_dump version 18.0
 
--- Started on 2025-12-08 22:10:33
+-- Started on 2025-12-09 18:05:32
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -31,9 +31,9 @@ CREATE DATABASE aplikasi_service_elektronik WITH TEMPLATE = template0 ENCODING =
 
 ALTER DATABASE aplikasi_service_elektronik OWNER TO postgres;
 
-\unrestrict W9NcCyGPcDFSbbH8zcXyRoY1GlBzjVsUle5vRfyaGiuDaN6BnWTPd89lffLEIgo
+\unrestrict XFEmFekbzFHyCEIUUPj8sTWeddaB7YDfd5gQ7TtPYeef3r0VeITvxGL805Kb8C0
 \connect aplikasi_service_elektronik
-\restrict W9NcCyGPcDFSbbH8zcXyRoY1GlBzjVsUle5vRfyaGiuDaN6BnWTPd89lffLEIgo
+\restrict XFEmFekbzFHyCEIUUPj8sTWeddaB7YDfd5gQ7TtPYeef3r0VeITvxGL805Kb8C0
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -650,26 +650,26 @@ ALTER VIEW public.vw_pembayaran_sederhana OWNER TO postgres;
 -- Data for Name: admin; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.admin VALUES (8001, 'admin_andi', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Andi Saputra', 'adminandi@gmail.com', '2025-08-30');
-INSERT INTO public.admin VALUES (8002, 'admin_budi', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Budi Rahman', 'adminbudi@gmail.com', '2025-09-01');
-INSERT INTO public.admin VALUES (8003, 'admin_citra', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Citra Lestari', 'admincitra@gmail.com', '2025-09-04');
-INSERT INTO public.admin VALUES (8004, 'admin_dedi', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Dedi Prakoso', 'admindedi@gmail.com', '2025-09-06');
-INSERT INTO public.admin VALUES (8005, 'admin_eka', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Eka Putri', 'admineka@gmail.com', '2025-09-09');
-INSERT INTO public.admin VALUES (8006, 'admin_fajar', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Fajar Nugraha', 'adminfajar@gmail.com', '2025-09-11');
-INSERT INTO public.admin VALUES (8007, 'admin_gilang', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Gilang Santoso', 'admingilang@gmail.com', '2025-09-14');
-INSERT INTO public.admin VALUES (8008, 'admin_hani', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Hani Marlina', 'adminhani@gmail.com', '2025-09-16');
-INSERT INTO public.admin VALUES (8009, 'admin_irfan', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Irfan Kurniawan', 'adminirfan@gmail.com', '2025-09-19');
-INSERT INTO public.admin VALUES (8010, 'admin_joko', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Joko Widodo', 'adminjoko@gmail.com', '2025-09-21');
-INSERT INTO public.admin VALUES (8011, 'admin_kiki', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Kiki Anggraini', 'adminkiki@gmail.com', '2025-09-24');
-INSERT INTO public.admin VALUES (8012, 'admin_lutfi', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lutfi Hidayat', 'adminlutfi@gmail.com', '2025-09-27');
-INSERT INTO public.admin VALUES (8013, 'admin_maya', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Maya Sari', 'adminmaya@gmail.com', '2025-09-29');
-INSERT INTO public.admin VALUES (8014, 'admin_nanda', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Nanda Prakoso', 'adminnanda@gmail.com', '2025-10-02');
-INSERT INTO public.admin VALUES (8015, 'admin_oka', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Oka Wijaya', 'adminoka@gmail.com', '2025-10-04');
-INSERT INTO public.admin VALUES (8016, 'admin_putri', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Putri Ayuningtyas', 'adminputri@gmail.com', '2025-10-07');
-INSERT INTO public.admin VALUES (8017, 'admin_rian', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Rian Firmansyah', 'adminrian@gmail.com', '2025-10-09');
-INSERT INTO public.admin VALUES (8018, 'admin_sari', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Sari Indah', 'adminsari@gmail.com', '2025-10-11');
-INSERT INTO public.admin VALUES (8019, 'admin_taufik', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Taufik Hidayat', 'admintaufik@gmail.com', '2025-10-14');
-INSERT INTO public.admin VALUES (8020, 'admin_wulan', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Wulan Dewi', 'adminwulan@gmail.com', '2025-10-19');
+INSERT INTO public.admin VALUES (8001, 'admin_andi', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Andi Saputra', 'adminandi@gmail.com', '2025-08-30');
+INSERT INTO public.admin VALUES (8002, 'admin_budi', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Budi Rahman', 'adminbudi@gmail.com', '2025-09-01');
+INSERT INTO public.admin VALUES (8003, 'admin_citra', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Citra Lestari', 'admincitra@gmail.com', '2025-09-04');
+INSERT INTO public.admin VALUES (8004, 'admin_dedi', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Dedi Prakoso', 'admindedi@gmail.com', '2025-09-06');
+INSERT INTO public.admin VALUES (8005, 'admin_eka', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Eka Putri', 'admineka@gmail.com', '2025-09-09');
+INSERT INTO public.admin VALUES (8006, 'admin_fajar', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Fajar Nugraha', 'adminfajar@gmail.com', '2025-09-11');
+INSERT INTO public.admin VALUES (8007, 'admin_gilang', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Gilang Santoso', 'admingilang@gmail.com', '2025-09-14');
+INSERT INTO public.admin VALUES (8008, 'admin_hani', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Hani Marlina', 'adminhani@gmail.com', '2025-09-16');
+INSERT INTO public.admin VALUES (8009, 'admin_irfan', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Irfan Kurniawan', 'adminirfan@gmail.com', '2025-09-19');
+INSERT INTO public.admin VALUES (8010, 'admin_joko', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Joko Widodo', 'adminjoko@gmail.com', '2025-09-21');
+INSERT INTO public.admin VALUES (8011, 'admin_kiki', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Kiki Anggraini', 'adminkiki@gmail.com', '2025-09-24');
+INSERT INTO public.admin VALUES (8012, 'admin_lutfi', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Lutfi Hidayat', 'adminlutfi@gmail.com', '2025-09-27');
+INSERT INTO public.admin VALUES (8013, 'admin_maya', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Maya Sari', 'adminmaya@gmail.com', '2025-09-29');
+INSERT INTO public.admin VALUES (8014, 'admin_nanda', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Nanda Prakoso', 'adminnanda@gmail.com', '2025-10-02');
+INSERT INTO public.admin VALUES (8015, 'admin_oka', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Oka Wijaya', 'adminoka@gmail.com', '2025-10-04');
+INSERT INTO public.admin VALUES (8016, 'admin_putri', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Putri Ayuningtyas', 'adminputri@gmail.com', '2025-10-07');
+INSERT INTO public.admin VALUES (8017, 'admin_rian', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Rian Firmansyah', 'adminrian@gmail.com', '2025-10-09');
+INSERT INTO public.admin VALUES (8018, 'admin_sari', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Sari Indah', 'adminsari@gmail.com', '2025-10-11');
+INSERT INTO public.admin VALUES (8019, 'admin_taufik', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Taufik Hidayat', 'admintaufik@gmail.com', '2025-10-14');
+INSERT INTO public.admin VALUES (8020, 'admin_wulan', '$2y$12$q/eidgierpjFTDQCxEaX.OGXhXeh6J7nLAAv7ufDc8auuSo0MC9Y2', 'Wulan Dewi', 'adminwulan@gmail.com', '2025-10-19');
 
 
 --
@@ -678,46 +678,46 @@ INSERT INTO public.admin VALUES (8020, 'admin_wulan', '$2y$10$92IXUNpkjO0rOQ5byM
 -- Data for Name: pelanggan; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.pelanggan VALUES (1001, 'Andi Pratama', '081234000001', 'Malang', 'andipratama01@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1002, 'Budi Santoso', '081234000002', 'Malang', 'budisantoso02@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1003, 'Citra Dewi', '081234000003', 'Batu', 'citradewi03@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1004, 'Dimas Haryanto', '081234000004', 'Malang', 'dimasharyanto04@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1005, 'Eka Sari', '081234000005', 'Kepanjen', 'ekasari05@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1006, 'Farhan Nugraha', '081234000006', 'Blitar', 'farhann06@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1007, 'Gita Lestari', '081234000007', 'Malang', 'gitalestari07@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1008, 'Hadi Firmansyah', '081234000008', 'Batu', 'hadifirmansyah08@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1009, 'Intan Puspita', '081234000009', 'Dau', 'intanpuspita09@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1010, 'Joko Prabowo', '081234000010', 'Malang', 'jokoprabowo10@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1011, 'Kartika Ayu', '081234000011', 'Malang', 'kartikaayu11@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1012, 'Lutfi Ramadhan', '081234000012', 'Kepanjen', 'lutfiramadhan12@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1013, 'Mega Salsabila', '081234000013', 'Batu', 'megasalsabila13@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1014, 'Nanda Saputra', '081234000014', 'Malang', 'nandasaputra14@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1015, 'Oktavia Rahma', '081234000015', 'Malang', 'oktaviarahma15@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1016, 'Putra Wijaya', '081234000016', 'Turen', 'putrawijaya16@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1017, 'Qori Maulida', '081234000017', 'Malang', 'qorimaulida17@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1018, 'Rama Dwi Kurnia', '081234000018', 'Dampit', 'ramadwikurnia18@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1019, 'Siska Marlina', '081234000019', 'Malang', 'siskamarlina19@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1020, 'Taufik Hidayat', '081234000020', 'Batu', 'taufikhidayat20@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1021, 'Umi Salma', '081234000021', 'Malang', 'umisalma21@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1022, 'Vino Pratama', '081234000022', 'Malang', 'vinopratama22@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1023, 'Wulan Kurniasih', '081234000023', 'Pagelaran', 'wulankurniasih23@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1024, 'Xavier Maulana', '081234000024', 'Malang', 'xaviermaulana24@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1025, 'Yoga Prasasti', '081234000025', 'Blitar', 'yogaprasasti25@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1026, 'Zahra Fitriani', '081234000026', 'Malang', 'zahrafitriani26@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1027, 'Anya Rahmawati', '081234000027', 'Samarinda', 'anyarahmawati27@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1028, 'Berlian Putri', '081234000028', 'Malang', 'berlianputri28@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1029, 'Chandra Adi', '081234000029', 'Tulungagung', 'chandraadi29@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1030, 'Dewangga Surya', '081234000030', 'Malang', 'dewanggasurya30@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1031, 'Erwin Septian', '081234000031', 'Batu', 'erwinseptian31@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1032, 'Fauzi Ridwan', '081234000032', 'Malang', 'fauziridwan32@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1033, 'Galuh Rahadian', '081234000033', 'Malang', 'galuhrahadian33@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1034, 'Herlina Mutiara', '081234000034', 'Dau', 'herlinamutiara34@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1035, 'Ilham Kurniawan', '081234000035', 'Malang', 'ilhamkurniawan35@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1036, 'Jihan Fadila', '081234000036', 'Batu', 'jihanfadila36@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1037, 'Kenzu Mahendra', '081234000037', 'Malang', 'kenzumahendra37@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1039, 'Miko Anargya', '081234000039', 'Malang', 'mikoanargya39@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1038, 'Larisa Ayunda', '081234000038', 'Kediri', 'larisaayunda38@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
-INSERT INTO public.pelanggan VALUES (1040, 'Nayla Rahmatika', '081234000040', 'Malang', 'naylarahmatika40@gmail.com', '2025-10-29', '$2y$10$8u4q7ZzL8d0kYwv5x6Y2n8JlF3nZP4i9COg9q4Yk9972z9cYd2d3kqO');
+INSERT INTO public.pelanggan VALUES (1001, 'Andi Pratama', '081234000001', 'Malang', 'andipratama01@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1002, 'Budi Santoso', '081234000002', 'Malang', 'budisantoso02@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1003, 'Citra Dewi', '081234000003', 'Batu', 'citradewi03@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1004, 'Dimas Haryanto', '081234000004', 'Malang', 'dimasharyanto04@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1005, 'Eka Sari', '081234000005', 'Kepanjen', 'ekasari05@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1006, 'Farhan Nugraha', '081234000006', 'Blitar', 'farhann06@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1007, 'Gita Lestari', '081234000007', 'Malang', 'gitalestari07@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1008, 'Hadi Firmansyah', '081234000008', 'Batu', 'hadifirmansyah08@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1009, 'Intan Puspita', '081234000009', 'Dau', 'intanpuspita09@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1010, 'Joko Prabowo', '081234000010', 'Malang', 'jokoprabowo10@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1011, 'Kartika Ayu', '081234000011', 'Malang', 'kartikaayu11@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1012, 'Lutfi Ramadhan', '081234000012', 'Kepanjen', 'lutfiramadhan12@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1013, 'Mega Salsabila', '081234000013', 'Batu', 'megasalsabila13@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1014, 'Nanda Saputra', '081234000014', 'Malang', 'nandasaputra14@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1015, 'Oktavia Rahma', '081234000015', 'Malang', 'oktaviarahma15@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1016, 'Putra Wijaya', '081234000016', 'Turen', 'putrawijaya16@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1017, 'Qori Maulida', '081234000017', 'Malang', 'qorimaulida17@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1018, 'Rama Dwi Kurnia', '081234000018', 'Dampit', 'ramadwikurnia18@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1019, 'Siska Marlina', '081234000019', 'Malang', 'siskamarlina19@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1020, 'Taufik Hidayat', '081234000020', 'Batu', 'taufikhidayat20@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1021, 'Umi Salma', '081234000021', 'Malang', 'umisalma21@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1022, 'Vino Pratama', '081234000022', 'Malang', 'vinopratama22@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1023, 'Wulan Kurniasih', '081234000023', 'Pagelaran', 'wulankurniasih23@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1024, 'Xavier Maulana', '081234000024', 'Malang', 'xaviermaulana24@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1025, 'Yoga Prasasti', '081234000025', 'Blitar', 'yogaprasasti25@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1026, 'Zahra Fitriani', '081234000026', 'Malang', 'zahrafitriani26@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1027, 'Anya Rahmawati', '081234000027', 'Samarinda', 'anyarahmawati27@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1028, 'Berlian Putri', '081234000028', 'Malang', 'berlianputri28@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1029, 'Chandra Adi', '081234000029', 'Tulungagung', 'chandraadi29@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1030, 'Dewangga Surya', '081234000030', 'Malang', 'dewanggasurya30@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1031, 'Erwin Septian', '081234000031', 'Batu', 'erwinseptian31@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1032, 'Fauzi Ridwan', '081234000032', 'Malang', 'fauziridwan32@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1033, 'Galuh Rahadian', '081234000033', 'Malang', 'galuhrahadian33@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1034, 'Herlina Mutiara', '081234000034', 'Dau', 'herlinamutiara34@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1035, 'Ilham Kurniawan', '081234000035', 'Malang', 'ilhamkurniawan35@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1036, 'Jihan Fadila', '081234000036', 'Batu', 'jihanfadila36@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1037, 'Kenzu Mahendra', '081234000037', 'Malang', 'kenzumahendra37@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1039, 'Miko Anargya', '081234000039', 'Malang', 'mikoanargya39@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1038, 'Larisa Ayunda', '081234000038', 'Kediri', 'larisaayunda38@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
+INSERT INTO public.pelanggan VALUES (1040, 'Nayla Rahmatika', '081234000040', 'Malang', 'naylarahmatika40@gmail.com', '2025-10-29', '$2y$12$.VIrCfi099e8dQ.Nehatuu4Wvv.GbpmDKoT5zBL6wXZDGojwWl.7C');
 
 
 --
@@ -970,26 +970,26 @@ INSERT INTO public.status_perbaikan VALUES (6010, 'Dibatalkan', 'Perbaikan dibat
 -- Data for Name: teknisi; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.teknisi VALUES (3001, 'Andi Pratama', 'Smartphone & Tablet', '081234567801', 'andipratama@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3002, 'Budi Santoso', 'Laptop & Komputer', '081234567802', 'budisantoso@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3003, 'Citra Lestari', 'Printer & Scanner', '081234567803', 'citralestari@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3004, 'Dedi Rahman', 'Elektronik Rumah', '081234567804', 'dedirahman@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3005, 'Eka Putri', 'Smartphone', '081234567805', 'ekaputri@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3006, 'Fajar Nugraha', 'Laptop & Komputer', '081234567806', 'fajarnugraha@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3007, 'Gilang Saputra', 'AC & Kulkas', '081234567807', 'gilangsaputra@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3008, 'Hani Marlina', 'Smartphone & Tablet', '081234567808', 'hanimarlina@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3009, 'Irfan Kurniawan', 'Printer & Scanner', '081234567809', 'irfankurniawan@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3010, 'Joko Widodo', 'Laptop & Komputer', '081234567810', 'jokowidodo@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3011, 'Kiki Anggraini', 'Elektronik Rumah', '081234567811', 'kikianggraini@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3012, 'Lutfi Hidayat', 'Smartphone & Tablet', '081234567812', 'lutfihidayat@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3013, 'Maya Sari', 'Printer & Scanner', '081234567813', 'maya@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3014, 'Nanda Prakoso', 'Laptop & Komputer', '081234567814', 'nandaprakoso@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3015, 'Oka Wijaya', 'AC & Kulkas', '081234567815', 'okawijaya@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3016, 'Putri Ayuningtyas', 'Smartphone & Tablet', '081234567816', 'putriayuningtyas@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3017, 'Rian Firmansyah', 'Elektronik Rumah', '081234567817', 'rianfirmansyah@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3018, 'Sari Indah', 'Printer & Scanner', '081234567818', 'sariindah@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3019, 'Taufik Hidayat', 'Laptop & Komputer', '081234567819', 'taufikhidayat@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
-INSERT INTO public.teknisi VALUES (3020, 'Wulan Dewi', 'Smartphone & Tablet', '081234567820', 'wulandewi@gmail.com', true, '$2y$10$Og9q4Yk9972z9cYd2d3kqOYQhZzL8d0kYwv5x6Y2n8JlF3nZP4i9C');
+INSERT INTO public.teknisi VALUES (3001, 'Andi Pratama', 'Smartphone & Tablet', '081234567801', 'andipratama@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3002, 'Budi Santoso', 'Laptop & Komputer', '081234567802', 'budisantoso@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3003, 'Citra Lestari', 'Printer & Scanner', '081234567803', 'citralestari@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3004, 'Dedi Rahman', 'Elektronik Rumah', '081234567804', 'dedirahman@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3005, 'Eka Putri', 'Smartphone', '081234567805', 'ekaputri@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3006, 'Fajar Nugraha', 'Laptop & Komputer', '081234567806', 'fajarnugraha@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3007, 'Gilang Saputra', 'AC & Kulkas', '081234567807', 'gilangsaputra@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3008, 'Hani Marlina', 'Smartphone & Tablet', '081234567808', 'hanimarlina@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3009, 'Irfan Kurniawan', 'Printer & Scanner', '081234567809', 'irfankurniawan@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3010, 'Joko Widodo', 'Laptop & Komputer', '081234567810', 'jokowidodo@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3011, 'Kiki Anggraini', 'Elektronik Rumah', '081234567811', 'kikianggraini@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3012, 'Lutfi Hidayat', 'Smartphone & Tablet', '081234567812', 'lutfihidayat@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3013, 'Maya Sari', 'Printer & Scanner', '081234567813', 'maya@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3014, 'Nanda Prakoso', 'Laptop & Komputer', '081234567814', 'nandaprakoso@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3015, 'Oka Wijaya', 'AC & Kulkas', '081234567815', 'okawijaya@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3016, 'Putri Ayuningtyas', 'Smartphone & Tablet', '081234567816', 'putriayuningtyas@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3017, 'Rian Firmansyah', 'Elektronik Rumah', '081234567817', 'rianfirmansyah@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3018, 'Sari Indah', 'Printer & Scanner', '081234567818', 'sariindah@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3019, 'Taufik Hidayat', 'Laptop & Komputer', '081234567819', 'taufikhidayat@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
+INSERT INTO public.teknisi VALUES (3020, 'Wulan Dewi', 'Smartphone & Tablet', '081234567820', 'wulandewi@gmail.com', true, '$2y$12$9FLhhIr9u4jqxCdCfGdZBenhkCZHygmJo3o8gBFIDIOom2I0q3v9y');
 
 
 --
@@ -1403,11 +1403,11 @@ REFRESH MATERIALIZED VIEW public.mv_kinerja_teknisi;
 REFRESH MATERIALIZED VIEW public.mv_pendapatan_bulanan;
 
 
--- Completed on 2025-12-08 22:10:34
+-- Completed on 2025-12-09 18:05:32
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict W9NcCyGPcDFSbbH8zcXyRoY1GlBzjVsUle5vRfyaGiuDaN6BnWTPd89lffLEIgo
+\unrestrict XFEmFekbzFHyCEIUUPj8sTWeddaB7YDfd5gQ7TtPYeef3r0VeITvxGL805Kb8C0
 
