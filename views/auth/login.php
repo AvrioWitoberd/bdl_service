@@ -199,32 +199,17 @@ $loginAs = $_GET['login_as'] ?? 'pelanggan'; // Ganti default ke pelanggan, biar
     <div class="login-container">
         <h2>🔐 Login Area</h2>
 
-        <form action="../../controllers/AuthController.php" method="post">
-            <input type="hidden" name="action" value="login">
+                <form action="../../controllers/AuthController.php" method="POST">
+                    <input type="hidden" name="action" value="login">
 
-            <label for="login_as">Login Sebagai:</label>
-            <select name="login_as" id="login_as" required onchange="updateUsernameLabel()">
-                <option value="pelanggan" <?php if($loginAs === 'pelanggan') echo 'selected'; ?>>Pelanggan (Email)</option>
-                <option value="teknisi" <?php if($loginAs === 'teknisi') echo 'selected'; ?>>Teknisi (Email)</option>
-                <option value="admin" <?php if($loginAs === 'admin') echo 'selected'; ?>>Admin (Email)</option>
-            </select>
+                    <label>Email:</label>
+                    <input type="email" name="email" required>
 
-            <label for="username" id="username_label">
-                Email:
-            </label>
-            <input
-                type="email"
-                id="username"
-                name="username"
-                required
-                placeholder="Contoh: user@email.com"
-            >
+                    <label>Password:</label>
+                    <input type="password" name="password" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required placeholder="••••••••">
-
-            <input type="submit" value="Masuk Sekarang">
-        </form>
+                    <button type="submit">Login</button>
+                </form>
 
         <?php if (isset($_GET['error'])): ?>
             <div class="error-message">

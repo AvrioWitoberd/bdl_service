@@ -435,26 +435,26 @@ session_start();
             <li><a href="#layanan">Layanan</a></li>
             <li><a href="#cara-kerja">Cara Kerja</a></li>
             <?php if (!isset($_SESSION['user_id'])): ?>
-                <li><a href="views/auth/login.php" style="color: var(--primary); font-weight: bold;">Login</a></li>
+                <li><a href="/bdl_service/views/auth/login.php" style="color: var(--primary); font-weight: bold;">Login</a></li>
             <?php else: ?>
                 <?php
                 $dashboard_link = '#';
 
                 if ($_SESSION['role'] === 'admin') {
-                    $dashboard_link = 'views/dashboard.php';
+                    $dashboard_link = '/bdl_service/views/dashboard.php';
                 } elseif ($_SESSION['role'] === 'teknisi') {
-                    $dashboard_link = 'views/services/list.php';
+                    $dashboard_link = '/bdl_service/views/services/list.php';
                 } elseif ($_SESSION['role'] === 'pelanggan') {
-                    $dashboard_link = 'views/services/list.php';
+                    $dashboard_link = '/bdl_service/views/services/list.php';
                 }
                 ?>
                 <li>
                     <a href="<?= $dashboard_link ?>">Dashboard (<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>)</a>
                 </li>
 
-                <li><a href="controllers/AuthController.php?action=logout" style="color: #ef4444;">Logout</a></li>
+                <li><a href="/bdl_service/controllers/AuthController.php?action=logout" style="color: #ef4444;">Logout</a></li>
             <?php endif; ?>
-            <li><a href="views/services/track_public.php">Track Service</a></li>
+            <li><a href="/bdl_service/views/services/track_public.php">Track Service</a></li>
         </ul>
     </nav>
 </header>
@@ -466,12 +466,12 @@ session_start();
         
         <div class="cta-buttons">
             <?php if (!isset($_SESSION['user_id'])): ?>
-                <a href="views/customers/register.php" class="btn">Daftar Akun Baru</a>
-                <a href="views/auth/login.php" class="btn btn-secondary">Login</a>
+                <a href="/bdl_service/views/customers/register.php" class="btn">Daftar Akun Baru</a>
+                <a href="/bdl_service/views/auth/login.php" class="btn btn-secondary">Login</a>
             <?php else: ?>
-                <a href="views/services/create.php" class="btn btn-special">Buat Service Baru</a>
+                <a href="/bdl_service/views/services/create.php" class="btn btn-special">Buat Service Baru</a>
             <?php endif; ?>
-            <a href="views/services/track_public.php" class="btn btn-secondary">Cek Status Service</a>
+            <a href="/bdl_service/views/services/track_public.php" class="btn btn-secondary">Cek Status Service</a>
         </div>
     </section>
 
@@ -508,11 +508,11 @@ session_start();
         <h2>✅ Siap untuk Service?</h2>
         <p>Jangan biarkan produktivitas terhambat. Kami siap membantu Anda sekarang!</p>
         <?php if (!isset($_SESSION['user_id'])): ?>
-            <a href="views/customers/register.php" class="btn btn-special">Daftar Sekarang</a>
-            <a href="views/auth/login.php" class="btn">Login</a>
+            <a href="/bdl_service/views/customers/register.php" class="btn btn-special">Daftar Sekarang</a>
+            <a href="/bdl_service/views/auth/login.php" class="btn">Login</a>
         <?php else: ?>
-            <a href="views/services/create.php" class="btn btn-special">Buat Service Baru</a>
-            <a href="views/services/list.php" class="btn">History Service</a>
+            <a href="/bdl_service/views/services/create.php" class="btn btn-special">Buat Service Baru</a>
+            <a href="/bdl_service/views/services/list.php" class="btn">History Service</a>
         <?php endif; ?>
     </section>
 </main>

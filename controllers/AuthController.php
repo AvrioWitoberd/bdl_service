@@ -1,6 +1,8 @@
 <?php
 require_once '../models/User.php';
 
+session_start();
+
 $pdo = require_once '../config/database.php';
 if (!$pdo) {
     die("Database connection failed.");
@@ -8,42 +10,54 @@ if (!$pdo) {
 
 $user = new User($pdo);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'login') {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
-    $login_as = $_POST['login_as'];
+// =====================
+// LOGIN TANPA PILIH ROLE
+// =====================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'login') {
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (empty($email) || empty($password)) {
+        header("Location: ../views/auth/login.php?error=empty");
+        exit;
+    }
 
     $success = false;
-    if ($login_as === 'admin') {
-        $success = $user->authenticateAdmin($username, $password);
-    } elseif ($login_as === 'pelanggan') {
-        $success = $user->authenticatePelanggan($username, $password);
-    } elseif ($login_as === 'teknisi') {
-        $success = $user->authenticateTeknisi($username, $password);
+
+    // Cek admin dulu
+    if ($user->authenticateAdmin($email, $password)) {
+        $success = true;
+    }
+
+    // Kalau bukan admin, cek teknisi
+    if (!$success && $user->authenticateTeknisi($email, $password)) {
+        $success = true;
+    }
+
+    // Kalau bukan teknisi, cek pelanggan
+    if (!$success && $user->authenticatePelanggan($email, $password)) {
+        $success = true;
     }
 
     if ($success) {
-        $role = $_SESSION['role'];
-        if ($role === 'admin') {
-            $redirect = '../views/dashboard.php';
-        } elseif ($role === 'pelanggan') {
-            $redirect = '../views/services/list.php';
-        } elseif ($role === 'teknisi') {
-            $redirect = '../views/services/list.php';
-        } else {
-            $redirect = '../public/index.php';
-        }
+        $role = $_SESSION['role'] ?? '';
 
-        header("Location: $redirect");
-        exit;
-    } else {
-        header("Location: ../views/auth/login.php?error=1&login_as=" . urlencode($login_as));
+        if ($role === 'admin') {
+            header("Location: ../views/dashboard.php");
+        } else {
+            header("Location: ../views/services/list.php");
+        }
         exit;
     }
+
+    header("Location: ../views/auth/login.php?error=1");
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['action'] === 'logout') {
-    session_start();
+// =====================
+// LOGOUT
+// =====================
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'logout') {
     session_unset();
     session_destroy();
     header("Location: ../views/auth/login.php");

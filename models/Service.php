@@ -9,25 +9,50 @@ class Service
         $this->pdo = $pdo;
     }
 
-    public function create($id_perangkat, $id_teknisi, $id_admin, $keluhan, $biaya_service = 0.00)
-    {
-        try {
-            $this->pdo->beginTransaction();
+    public function create($id_perangkat, $id_teknisi, $id_admin, $id_pelanggan, $keluhan, $biaya_service = 0.00)
+{
+    try {
+        $this->pdo->beginTransaction();
 
-            $stmt = $this->pdo->prepare("INSERT INTO service (id_perangkat, id_teknisi, id_admin, keluhan, biaya_service) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$id_perangkat, $id_teknisi, $id_admin, $keluhan, $biaya_service]);
+        // Default status = "Menunggu Konfirmasi"
+        $stmtStatus = $this->pdo->prepare("
+            SELECT id_status 
+            FROM status_perbaikan 
+            WHERE nama_status = 'Menunggu Konfirmasi'
+            LIMIT 1
+        ");
+        $stmtStatus->execute();
+        $status = $stmtStatus->fetchColumn();
 
-            $newServiceId = $this->pdo->lastInsertId();
+        $stmt = $this->pdo->prepare("
+            INSERT INTO service 
+            (id_perangkat, id_teknisi, id_admin, id_pelanggan, id_status, tanggal_masuk, keluhan, biaya_service)
+            VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)
+        ");
 
-            $this->pdo->commit();
-            return $newServiceId;
+        $stmt->execute([
+            $id_perangkat,
+            $id_teknisi,
+            $id_admin,
+            $id_pelanggan,
+            $status,
+            $keluhan,
+            $biaya_service
+        ]);
 
-        } catch (PDOException $e) {
-            $this->pdo->rollback();
-            error_log("Transaction failed creating service: " . $e->getMessage());
-            return false;
-        }
+        $stmt2 = $this->pdo->query("SELECT lastval()");
+        $newServiceId = $stmt2->fetchColumn();
+
+
+        $this->pdo->commit();
+        return $newServiceId;
+
+    } catch (PDOException $e) {
+        $this->pdo->rollBack();
+        error_log("Create service failed: " . $e->getMessage());
+        return false;
     }
+}
 
     public function getServices($limit = 10, $offset = 0, $search = '', $filterStatus = '', $filterTeknisi = '')
     {
@@ -110,26 +135,44 @@ class Service
 
     // Transaction: Complete service and record payment
     public function completeService($serviceId, $finalCost, $paymentMethod, $discount = 0.00)
-    {
-        try {
-            $this->pdo->beginTransaction();
+{
+    try {
+        $this->pdo->beginTransaction();
 
-            $stmt = $this->pdo->prepare("UPDATE service SET id_status = (SELECT id_status FROM status_perbaikan WHERE nama_status = 'completed'), tanggal_selesai = NOW(), biaya_service = ? WHERE id_service = ?");
-            $stmt->execute([$finalCost, $serviceId]);
+        // Update status ke "Selesai Diperbaiki"
+        $stmt = $this->pdo->prepare("
+            UPDATE service 
+            SET 
+                id_status = (
+                    SELECT id_status 
+                    FROM status_perbaikan 
+                    WHERE nama_status = 'Selesai Diperbaiki'
+                    LIMIT 1
+                ),
+                tanggal_selesai = NOW(),
+                biaya_service = ?
+            WHERE id_service = ?
+        ");
+        $stmt->execute([$finalCost, $serviceId]);
 
-            $finalPaymentAmount = $finalCost - ($finalCost * ($discount / 100));
+        $finalPaymentAmount = $finalCost - ($discount);
 
-            $stmt = $this->pdo->prepare("INSERT INTO pembayaran (id_service, metode_bayar, total_bayar, diskon, status_bayar) VALUES (?, ?, ?, ?, 'paid')");
-            $stmt->execute([$serviceId, $paymentMethod, $finalPaymentAmount, $discount]);
+        $stmt = $this->pdo->prepare("
+            INSERT INTO pembayaran 
+            (id_service, metode_bayar, total_bayar, diskon, status_bayar)
+            VALUES (?, ?, ?, ?, 'Lunas')
+        ");
+        $stmt->execute([$serviceId, $paymentMethod, $finalPaymentAmount, $discount]);
 
-            $this->pdo->commit();
-            return true;
+        $this->pdo->commit();
+        return true;
 
-        } catch (Exception $e) {
-            $this->pdo->rollback();
-            error_log("Transaction failed completing service: " . $e->getMessage());
-            return false;
-        }
+    } catch (Exception $e) {
+        $this->pdo->rollBack();
+        error_log("Transaction failed completing service: " . $e->getMessage());
+        return false;
     }
+}
+
 }
 ?>
