@@ -10,51 +10,74 @@ class Service
     }
 
     public function create($id_perangkat, $id_teknisi, $id_admin, $id_pelanggan, $keluhan, $biaya_service = 0.00)
-{
-    try {
-        $this->pdo->beginTransaction();
+    {
+        try {
+            $this->pdo->beginTransaction();
 
-        // Default status = "Menunggu Konfirmasi"
-        $stmtStatus = $this->pdo->prepare("
-            SELECT id_status 
-            FROM status_perbaikan 
-            WHERE nama_status = 'Menunggu Konfirmasi'
-            LIMIT 1
-        ");
-        $stmtStatus->execute();
-        $status = $stmtStatus->fetchColumn();
+            // Default status = "Menunggu Konfirmasi"
+            $stmtStatus = $this->pdo->prepare("SELECT id_status FROM status_perbaikan WHERE nama_status = 'Menunggu Konfirmasi' LIMIT 1");
+            $stmtStatus->execute();
+            $status = $stmtStatus->fetchColumn();
 
-        $stmt = $this->pdo->prepare("
-            INSERT INTO service 
-            (id_perangkat, id_teknisi, id_admin, id_pelanggan, id_status, tanggal_masuk, keluhan, biaya_service)
-            VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)
-        ");
+            // Jika status tidak ditemukan, ambil ID status pertama (fallback)
+            if (!$status) {
+                 $stmtStatus = $this->pdo->query("SELECT id_status FROM status_perbaikan LIMIT 1");
+                 $status = $stmtStatus->fetchColumn();
+            }
 
-        $stmt->execute([
-            $id_perangkat,
-            $id_teknisi,
-            $id_admin,
-            $id_pelanggan,
-            $status,
-            $keluhan,
-            $biaya_service
-        ]);
+            $stmt = $this->pdo->prepare("
+                INSERT INTO service 
+                (id_perangkat, id_teknisi, id_admin, id_pelanggan, id_status, tanggal_masuk, keluhan, biaya_service)
+                VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)
+            ");
 
-        $stmt2 = $this->pdo->query("SELECT lastval()");
-        $newServiceId = $stmt2->fetchColumn();
+            $stmt->execute([$id_perangkat, $id_teknisi, $id_admin, $id_pelanggan, $status, $keluhan, $biaya_service]);
+            
+            // PostgreSQL/PDO method untuk ambil last insert ID
+            $newServiceId = $this->pdo->lastInsertId(); 
 
+            $this->pdo->commit();
+            return $newServiceId;
 
-        $this->pdo->commit();
-        return $newServiceId;
-
-    } catch (PDOException $e) {
-        $this->pdo->rollBack();
-        error_log("Create service failed: " . $e->getMessage());
-        return false;
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            error_log("Create service failed: " . $e->getMessage());
+            return false;
+        }
     }
-}
 
-    public function getServices($limit = 10, $offset = 0, $search = '', $filterStatus = '', $filterTeknisi = '')
+    public function delete($id) {
+        // Hapus pembayaran terkait dulu jika ada constraint (opsional)
+        // $stmt = $this->pdo->prepare("DELETE FROM pembayaran WHERE id_service = ?");
+        // $stmt->execute([$id]);
+
+        $stmt = $this->pdo->prepare("DELETE FROM service WHERE id_service = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function update($id, $id_teknisi, $keluhan, $biaya_service, $id_status) 
+    {
+        // Perhatikan urutan kolom di SQL ini:
+        $stmt = $this->pdo->prepare("
+            UPDATE service 
+            SET id_teknisi = ?,    -- [1]
+                keluhan = ?,       -- [2]
+                biaya_service = ?, -- [3]
+                id_status = ?      -- [4]
+            WHERE id_service = ?   -- [5]
+        ");
+
+        return $stmt->execute([
+            $id_teknisi,    // [1] Masuk ke id_teknisi
+            $keluhan,       // [2] Masuk ke keluhan
+            $biaya_service, // [3] Masuk ke biaya_service
+            $id_status,     // [4] Masuk ke id_status (JANGAN TERTUKAR)
+            $id             // [5] Masuk ke WHERE id_service
+        ]);
+    }
+
+    // Tambahkan parameter $filterPelanggan di urutan terakhir
+    public function getServices($limit = 10, $offset = 0, $search = '', $filterStatus = '', $filterTeknisi = '', $filterPelanggan = '')
     {
         $whereClause = " WHERE 1=1 ";
         $params = [];
@@ -71,11 +94,20 @@ class Service
             $whereClause .= " AND s.id_teknisi = :teknisi_id";
             $params[':teknisi_id'] = $filterTeknisi;
         }
+        // === TAMBAHAN LOGIC FILTER PELANGGAN ===
+        if ($filterPelanggan) {
+            $whereClause .= " AND s.id_pelanggan = :pelanggan_id";
+            $params[':pelanggan_id'] = $filterPelanggan;
+        }
 
-        $sql = "SELECT s.id_service, s.tanggal_masuk, s.tanggal_selesai, s.keluhan, s.biaya_service, s.keterangan, s.catatan_internal, sp.nama_status, d.jenis_perangkat, d.merek, d.model, p.nama as nama_pelanggan, t.nama_teknisi
+        $sql = "SELECT s.id_service, s.tanggal_masuk, s.tanggal_selesai, s.keluhan, s.biaya_service, s.keterangan, s.catatan_internal, 
+                       sp.nama_status, 
+                       d.nama_perangkat, d.jenis_perangkat, d.merek, 
+                       p.nama as nama_pelanggan, 
+                       t.nama_teknisi
                  FROM service s
                  JOIN perangkat d ON s.id_perangkat = d.id_perangkat
-                 JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan
+                 JOIN pelanggan p ON s.id_pelanggan = p.id_pelanggan
                  LEFT JOIN teknisi t ON s.id_teknisi = t.id_teknisi
                  JOIN status_perbaikan sp ON s.id_status = sp.id_status
                  $whereClause
@@ -92,7 +124,7 @@ class Service
         return $stmt->fetchAll();
     }
 
-    public function countServices($search = '', $filterStatus = '', $filterTeknisi = '')
+    public function countServices($search = '', $filterStatus = '', $filterTeknisi = '', $filterPelanggan = '')
     {
         $whereClause = " WHERE 1=1 ";
         $params = [];
@@ -109,8 +141,20 @@ class Service
             $whereClause .= " AND s.id_teknisi = :teknisi_id";
             $params[':teknisi_id'] = $filterTeknisi;
         }
+        // === TAMBAHAN LOGIC FILTER PELANGGAN ===
+        if ($filterPelanggan) {
+            $whereClause .= " AND s.id_pelanggan = :pelanggan_id";
+            $params[':pelanggan_id'] = $filterPelanggan;
+        }
 
-        $sql = "SELECT COUNT(*) FROM service s JOIN perangkat d ON s.id_perangkat = d.id_perangkat JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan LEFT JOIN teknisi t ON s.id_teknisi = t.id_teknisi JOIN status_perbaikan sp ON s.id_status = sp.id_status $whereClause";
+        $sql = "SELECT COUNT(*) 
+                FROM service s 
+                JOIN perangkat d ON s.id_perangkat = d.id_perangkat 
+                JOIN pelanggan p ON s.id_pelanggan = p.id_pelanggan 
+                LEFT JOIN teknisi t ON s.id_teknisi = t.id_teknisi 
+                JOIN status_perbaikan sp ON s.id_status = sp.id_status 
+                $whereClause";
+
         $stmt = $this->pdo->prepare($sql);
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
@@ -121,58 +165,30 @@ class Service
 
     public function getById($id)
     {
-        $sql = "SELECT s.*, d.jenis_perangkat, d.merek, d.model, p.nama as nama_pelanggan, t.nama_teknisi, sp.nama_status FROM service s JOIN perangkat d ON s.id_perangkat = d.id_perangkat JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan LEFT JOIN teknisi t ON s.id_teknisi = t.id_teknisi JOIN status_perbaikan sp ON s.id_status = sp.id_status WHERE s.id_service = ?";
+        // PERBAIKAN: Hapus d.model
+        $sql = "SELECT s.*, 
+                       d.nama_perangkat, d.jenis_perangkat, d.merek, 
+                       p.nama as nama_pelanggan, 
+                       t.nama_teknisi, 
+                       sp.nama_status 
+                FROM service s 
+                JOIN perangkat d ON s.id_perangkat = d.id_perangkat 
+                JOIN pelanggan p ON s.id_pelanggan = p.id_pelanggan 
+                LEFT JOIN teknisi t ON s.id_teknisi = t.id_teknisi 
+                JOIN status_perbaikan sp ON s.id_status = sp.id_status 
+                WHERE s.id_service = ?";
+        
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
+    // Method lainnya (updateStatus, completeService) biarkan tetap sama...
+    // ...
     public function updateStatus($serviceId, $statusId, $keterangan = '', $catatan_internal = '')
     {
         $stmt = $this->pdo->prepare("UPDATE service SET id_status = ?, keterangan = ?, catatan_internal = ? WHERE id_service = ?");
         return $stmt->execute([$statusId, $keterangan, $catatan_internal, $serviceId]);
     }
-
-    // Transaction: Complete service and record payment
-    public function completeService($serviceId, $finalCost, $paymentMethod, $discount = 0.00)
-{
-    try {
-        $this->pdo->beginTransaction();
-
-        // Update status ke "Selesai Diperbaiki"
-        $stmt = $this->pdo->prepare("
-            UPDATE service 
-            SET 
-                id_status = (
-                    SELECT id_status 
-                    FROM status_perbaikan 
-                    WHERE nama_status = 'Selesai Diperbaiki'
-                    LIMIT 1
-                ),
-                tanggal_selesai = NOW(),
-                biaya_service = ?
-            WHERE id_service = ?
-        ");
-        $stmt->execute([$finalCost, $serviceId]);
-
-        $finalPaymentAmount = $finalCost - ($discount);
-
-        $stmt = $this->pdo->prepare("
-            INSERT INTO pembayaran 
-            (id_service, metode_bayar, total_bayar, diskon, status_bayar)
-            VALUES (?, ?, ?, ?, 'Lunas')
-        ");
-        $stmt->execute([$serviceId, $paymentMethod, $finalPaymentAmount, $discount]);
-
-        $this->pdo->commit();
-        return true;
-
-    } catch (Exception $e) {
-        $this->pdo->rollBack();
-        error_log("Transaction failed completing service: " . $e->getMessage());
-        return false;
-    }
-}
-
 }
 ?>

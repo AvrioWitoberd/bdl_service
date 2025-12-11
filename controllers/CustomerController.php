@@ -3,7 +3,7 @@
 require_once '../config/database.php';
 require_once '../models/Pelanggan.php';
 
-$pdo = require_once '../config/database.php';
+$pdo = require_once '../config/database.php'; // ✅ Sudah benar
 $pelangganModel = new Pelanggan($pdo);
 
 session_start();
@@ -32,6 +32,7 @@ switch ($action) {
         } else {
             $message = 'Error creating customer.';
         }
+        // ❗ Pastikan variabel $message dan $pdo tersedia di view
         include '../views/customers/create.php';
         break;
 
@@ -48,6 +49,7 @@ switch ($action) {
         } else {
             $message = 'Error updating customer.';
             $pelanggan = $pelangganModel->getById($id);
+            // ❗ Pastikan variabel $message, $pelanggan, dan $pdo tersedia di view
             include '../views/customers/edit.php';
         }
         break;
