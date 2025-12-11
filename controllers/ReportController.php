@@ -1,9 +1,10 @@
 <?php
 // controllers/ReportController.php
-require_once '../config/database.php';
+
+// PERBAIKAN: Load DB sekali saja
+$pdo = require_once '../config/database.php';
 require_once '../models/Report.php';
 
-$pdo = require_once '../config/database.php';
 $reportModel = new Report($pdo);
 
 session_start();
@@ -12,6 +13,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+// ... Sisa kode sama ...
 $startDate = $_GET['start_date'] ?? '';
 $endDate = $_GET['end_date'] ?? '';
 
@@ -26,5 +28,5 @@ if (isset($_GET['export']) && $_GET['export'] === 'revenue_by_tech') {
     $reportModel->exportToCSV($revenueByTech, 'revenue_by_technician_report.csv');
 }
 
-include '../views/reports/index.php'; // Load the view
+include '../views/reports/index.php';
 ?>

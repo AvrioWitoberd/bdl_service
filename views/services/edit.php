@@ -14,8 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $role = $_SESSION['role']; // Ambil role user
+$userId = $_SESSION['user_id']; // ID User yang sedang login
 
-// Cek Role: Hanya Admin & Teknisi boleh masuk sini
+// Cek Role: Hanya Admin & Teknisi boleh masuk
 if ($role === 'pelanggan') {
     header("Location: list.php");
     exit;
@@ -35,21 +36,29 @@ if (!$service) {
     exit;
 }
 
-// Ambil daftar teknisi (hanya perlu jika admin, tapi diload saja tidak apa-apa)
+// Ambil daftar teknisi & status
 $teknisiList = $teknisiModel->getAll(100, 0, '', true);
-
-// Ambil Daftar Status Perbaikan
 $stmtStatus = $pdo->query("SELECT * FROM status_perbaikan ORDER BY id_status ASC");
 $statusList = $stmtStatus->fetchAll();
 
-// Proses Update
+// --- PROSES UPDATE ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_teknisi = !empty($_POST['id_teknisi']) ? $_POST['id_teknisi'] : null;
     $keluhan = $_POST['keluhan'];
     $biaya = $_POST['biaya_service'];
     $id_status = $_POST['id_status'];
 
-    if ($serviceModel->update($id_service, $id_teknisi, $keluhan, $biaya, $id_status)) {
+    // === LOGIKA PENENTUAN ADMIN ===
+    if ($role === 'admin') {
+        // Jika yang ngedit ADMIN, otomatis catat "Saya yang bertanggung jawab sekarang"
+        $id_admin_to_save = $userId;
+    } else {
+        // Jika yang ngedit TEKNISI, jangan ubah admin penanggung jawab (pakai data lama)
+        $id_admin_to_save = $service['id_admin'];
+    }
+
+    // Panggil fungsi update dengan parameter baru ($id_admin_to_save)
+    if ($serviceModel->update($id_service, $id_teknisi, $keluhan, $biaya, $id_status, $id_admin_to_save)) {
         header("Location: list.php?msg=Service updated successfully");
         exit;
     } else {

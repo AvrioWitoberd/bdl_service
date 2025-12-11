@@ -1,7 +1,10 @@
 <?php
 // views/customers/edit.php
-require_once '../../config/database.php';
+
+// === PERBAIKAN: Panggil database SEKALI saja ===
+$pdo = require_once '../../config/database.php';
 require_once '../../models/Pelanggan.php';
+
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../auth/login.php");
@@ -9,14 +12,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 $pelangganModel = new Pelanggan($pdo);
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $pelanggan = $pelangganModel->getById($id);
 
 if (!$pelanggan) {
     die("Customer not found.");
 }
 
-$message = $message ?? ''; // Ambil dari controller jika ada
+$message = isset($_GET['msg']) ? $_GET['msg'] : ''; 
 ?>
 <!DOCTYPE html>
 <html>

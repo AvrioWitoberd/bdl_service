@@ -1,9 +1,10 @@
 <?php
 // controllers/SparepartController.php
-require_once '../config/database.php';
+
+// === PERBAIKAN: Panggil database SEKALI saja ===
+$pdo = require_once '../config/database.php';
 require_once '../models/Sparepart.php';
 
-$pdo = require_once '../config/database.php';
 $sparepartModel = new Sparepart($pdo);
 
 session_start();
@@ -25,8 +26,11 @@ switch ($action) {
             header("Location: ../views/spareparts/list.php?msg=Spare part created successfully");
             exit;
         } else {
-            $message = 'Error creating spare part.';
-            include '../views/spareparts/create.php';
+            $error_msg = 'Error creating spare part.';
+            // Simpan input ke session agar tidak hilang
+            $_SESSION['old_form'] = $_POST;
+            header("Location: ../views/spareparts/create.php?error=" . urlencode($error_msg));
+            exit;
         }
         break;
 
@@ -41,9 +45,9 @@ switch ($action) {
             header("Location: ../views/spareparts/list.php?msg=Spare part updated successfully");
             exit;
         } else {
-            $message = 'Error updating spare part.';
-            $sparepart = $sparepartModel->getById($id);
-            include '../views/spareparts/edit.php';
+            // Redirect balik ke edit jika gagal
+            header("Location: ../views/spareparts/edit.php?id=$id&msg=Error updating spare part");
+            exit;
         }
         break;
 

@@ -1,9 +1,10 @@
 <?php
 // controllers/CustomerController.php
-require_once '../config/database.php';
+
+// Panggil database SEKALI saja di atas
+$pdo = require_once '../config/database.php';
 require_once '../models/Pelanggan.php';
 
-$pdo = require_once '../config/database.php'; // ✅ Sudah benar
 $pelangganModel = new Pelanggan($pdo);
 
 session_start();
@@ -23,17 +24,28 @@ switch ($action) {
         $password = $_POST['password'];
         $confirm_password = $_POST['confirm_password'];
 
-        $message = '';
+        $error_msg = '';
+
+        // Validasi Password
         if ($password !== $confirm_password) {
-            $message = 'Password and confirmation do not match.';
-        } elseif ($pelangganModel->create($nama, $no_hp, $alamat, $email, $password)) {
+            $error_msg = 'Password and confirmation do not match.';
+        } 
+        // Coba Create
+        elseif ($pelangganModel->create($nama, $no_hp, $alamat, $email, $password)) {
+            // Sukses
             header("Location: ../views/customers/list.php?msg=Customer created successfully");
             exit;
         } else {
-            $message = 'Error creating customer.';
+            // Gagal Query
+            $error_msg = 'Error creating customer.';
         }
-        // ❗ Pastikan variabel $message dan $pdo tersedia di view
-        include '../views/customers/create.php';
+
+        // === JIKA GAGAL: SIMPAN INPUT KE SESSION & REDIRECT ===
+        if ($error_msg) {
+            $_SESSION['old_form'] = $_POST; // Simpan inputan biar gak ilang
+            header("Location: ../views/customers/create.php?error=" . urlencode($error_msg));
+            exit;
+        }
         break;
 
     case 'update':
@@ -47,10 +59,9 @@ switch ($action) {
             header("Location: ../views/customers/list.php?msg=Customer updated successfully");
             exit;
         } else {
-            $message = 'Error updating customer.';
-            $pelanggan = $pelangganModel->getById($id);
-            // ❗ Pastikan variabel $message, $pelanggan, dan $pdo tersedia di view
-            include '../views/customers/edit.php';
+            // Untuk update, redirect balik ke edit.php juga lebih aman
+            header("Location: ../views/customers/edit.php?id=$id&msg=Error updating customer");
+            exit;
         }
         break;
 

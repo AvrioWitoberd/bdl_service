@@ -1,29 +1,37 @@
 <?php
 // controllers/DatabaseFeaturesController.php
-require_once '../config/database.php';
+
+// 1. Load Database SEKALI saja
+$pdo = require_once '../config/database.php';
 require_once '../models/DatabaseFeatures.php';
 
-$pdo = require_once '../config/database.php';
 $dbFeaturesModel = new DatabaseFeatures($pdo);
 
 session_start();
+// Hanya Admin yang boleh akses
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../views/auth/login.php");
     exit;
 }
 
 $refreshMessage = '';
+$msgClass = '';
+
+// Handle Refresh Action
 if (isset($_GET['refresh_mv'])) {
     if ($dbFeaturesModel->refreshMonthlyRevenueMV()) {
-        $refreshMessage = 'Materialized View Refreshed Successfully!';
+        $refreshMessage = '✅ Materialized View Berhasil Di-refresh!';
+        $msgClass = 'success';
     } else {
-        $refreshMessage = 'Error refreshing Materialized View.';
+        $refreshMessage = '❌ Gagal me-refresh Materialized View.';
+        $msgClass = 'error';
     }
 }
 
+// Ambil Data untuk View
 $mvData = $dbFeaturesModel->getMonthlyRevenueMV();
 $viewData = $dbFeaturesModel->getServiceSummaryViewData();
 $explainResults = $dbFeaturesModel->getExplainAnalyzeResults();
 
-include '../views/database_features/performance.php'; // Load the view
+include '../views/database_features/performance.php'; 
 ?>

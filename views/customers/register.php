@@ -270,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div class="nav-links">
-            <a href="../../public/index.php" class="back-link">← Kembali ke Beranda</a>
+            <a href="../../index.php" class="back-link">← Kembali ke Beranda</a>
             <a href="../auth/login.php" class="login-link">Sudah punya akun? Login</a>
         </div>
     </div>

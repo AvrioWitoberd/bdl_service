@@ -423,10 +423,6 @@ session_start();
 </head>
 <body>
 
-<?php
-// PHP session_start() sudah ada di bagian atas
-?>
-
 <header>
     <h1>Service Elektronik ABC</h1>
     <nav>
@@ -468,9 +464,19 @@ session_start();
             <?php if (!isset($_SESSION['user_id'])): ?>
                 <a href="/bdl_service/views/customers/register.php" class="btn">Daftar Akun Baru</a>
                 <a href="/bdl_service/views/auth/login.php" class="btn btn-secondary">Login</a>
+            
             <?php else: ?>
-                <a href="/bdl_service/views/services/create.php" class="btn btn-special">Buat Service Baru</a>
+                <?php if ($_SESSION['role'] !== 'teknisi'): ?>
+                    <a href="/bdl_service/views/services/create.php" class="btn btn-special">Buat Service Baru</a>
+                <?php endif; ?>
+                
+                <?php 
+                    $btn_link = '/bdl_service/views/services/list.php';
+                    if ($_SESSION['role'] === 'admin') $btn_link = '/bdl_service/views/dashboard.php';
+                ?>
+                <a href="<?= $btn_link ?>" class="btn">Masuk Dashboard</a>
             <?php endif; ?>
+            
             <a href="/bdl_service/views/services/track_public.php" class="btn btn-secondary">Cek Status Service</a>
         </div>
     </section>
@@ -507,11 +513,16 @@ session_start();
     <section id="cta" class="reveal">
         <h2>✅ Siap untuk Service?</h2>
         <p>Jangan biarkan produktivitas terhambat. Kami siap membantu Anda sekarang!</p>
+        
         <?php if (!isset($_SESSION['user_id'])): ?>
             <a href="/bdl_service/views/customers/register.php" class="btn btn-special">Daftar Sekarang</a>
             <a href="/bdl_service/views/auth/login.php" class="btn">Login</a>
+        
         <?php else: ?>
-            <a href="/bdl_service/views/services/create.php" class="btn btn-special">Buat Service Baru</a>
+            <?php if ($_SESSION['role'] !== 'teknisi'): ?>
+                <a href="/bdl_service/views/services/create.php" class="btn btn-special">Buat Service Baru</a>
+            <?php endif; ?>
+            
             <a href="/bdl_service/views/services/list.php" class="btn">History Service</a>
         <?php endif; ?>
     </section>

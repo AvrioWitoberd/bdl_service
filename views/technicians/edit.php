@@ -1,7 +1,10 @@
 <?php
 // views/technicians/edit.php
-require_once '../../config/database.php';
+
+// === PERBAIKAN: Assign ke $pdo ===
+$pdo = require_once '../../config/database.php';
 require_once '../../models/Teknisi.php';
+
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../auth/login.php");
@@ -9,15 +12,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 $teknisiModel = new Teknisi($pdo);
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $teknisi = $teknisiModel->getById($id);
 
 if (!$teknisi) {
     die("Technician not found.");
 }
 
-$message = $message ?? '';
+$message = isset($_GET['msg']) ? $_GET['msg'] : ''; 
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,12 +31,15 @@ $message = $message ?? '';
 <body>
     <?php include '../../views/partials/header.php'; ?>
     <h1>Edit Technician</h1>
+    
     <?php if ($message): ?>
         <p style="color: red;"><?php echo $message; ?></p>
     <?php endif; ?>
+
     <form method="POST" action="../../controllers/TechnicianController.php">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id_teknisi" value="<?php echo $teknisi['id_teknisi']; ?>">
+        
         <label for="nama_teknisi">Name:</label><br>
         <input type="text" id="nama_teknisi" name="nama_teknisi" value="<?php echo htmlspecialchars($teknisi['nama_teknisi']); ?>" required><br><br>
 
@@ -49,6 +56,7 @@ $message = $message ?? '';
 
         <input type="submit" value="Update Technician">
     </form>
+    
     <a href="list.php">Back to Technicians</a>
     <?php include '../../views/partials/footer.php'; ?>
 </body>

@@ -11,6 +11,7 @@ class Report
 
     public function getServicesByStatusReport($startDate = null, $endDate = null)
     {
+        // ... (Kode ini sudah benar) ...
         $whereClause = " WHERE 1=1 ";
         $params = [];
         if ($startDate) {
@@ -34,7 +35,9 @@ class Report
 
     public function getRevenueByTechnicianReport($startDate = null, $endDate = null)
     {
-        $whereClause = " WHERE p.status_bayar = 'paid' ";
+        // PERBAIKAN: Ganti 'paid' menjadi 'Lunas' sesuai inputan di Service.php
+        $whereClause = " WHERE p.status_bayar = 'Lunas' ";
+        
         $params = [];
         if ($startDate) {
             $whereClause .= " AND s.tanggal_masuk >= :start_date ";

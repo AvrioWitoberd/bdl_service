@@ -1,7 +1,8 @@
 <?php
 // views/services/list.php
 
-$pdo = require_once '../../config/database.php'; 
+// 1. Panggil database SEKALI saja & simpan ke $pdo
+$pdo = require_once '../../config/database.php';
 require_once '../../models/Service.php';
 
 session_start();
@@ -98,7 +99,6 @@ $totalPages = ($totalServices > 0) ? ceil($totalServices / $limit) : 1;
         <?php endif; ?>
 
         <div class="content-header">
-            
             <?php if ($role !== 'teknisi'): ?>
                 <a href="create.php" class="btn-add">+ Request Service Baru</a>
             <?php else: ?>
@@ -115,12 +115,16 @@ $totalPages = ($totalServices > 0) ? ceil($totalServices / $limit) : 1;
             <thead>
                 <tr>
                     <th>ID</th>
+                    
                     <?php if($role !== 'pelanggan'): ?>
                         <th>Pelanggan</th>
                     <?php endif; ?>
                     
                     <th>Perangkat</th>
                     <th>Keluhan</th>
+                    
+                    <th>Biaya</th>
+                    
                     <th>Status</th>
                     
                     <?php if($role === 'admin'): ?><th>Teknisi</th><?php endif; ?>
@@ -134,7 +138,7 @@ $totalPages = ($totalServices > 0) ? ceil($totalServices / $limit) : 1;
             </thead>
             <tbody>
                 <?php if (empty($services)): ?>
-                    <tr><td colspan="8" style="text-align: center;">Tidak ada data service.</td></tr>
+                    <tr><td colspan="9" style="text-align: center;">Tidak ada data service.</td></tr>
                 <?php else: ?>
                     <?php foreach ($services as $s): ?>
                     <tr>
@@ -149,6 +153,11 @@ $totalPages = ($totalServices > 0) ? ceil($totalServices / $limit) : 1;
                             <small><?= htmlspecialchars($s['merek'] ?? '-') ?></small>
                         </td>
                         <td><?= htmlspecialchars($s['keluhan']) ?></td>
+                        
+                        <td style="font-weight: bold; color: #555;">
+                            Rp <?= number_format($s['biaya_service'], 0, ',', '.') ?>
+                        </td>
+
                         <td>
                             <?php 
                                 $st = strtolower($s['nama_status']);

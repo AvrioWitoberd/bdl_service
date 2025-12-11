@@ -1,41 +1,40 @@
 <?php
 // views/services/track_public.php
 
-// Pastikan path benar
-require_once __DIR__ . '/../../config/database.php';
+// Pastikan path benar & load DB sekali saja
+if (!isset($pdo)) {
+    $pdo = require_once __DIR__ . '/../../config/database.php';
+}
 
 $message = '';
 $service = null;
 $error = false;
 
-// Pastikan $pdo tersedia
-if (!isset($pdo) || $pdo === null) {
-    die("❌ ERROR: Koneksi database tidak tersedia. Pastikan database.php membuat variabel \$pdo.");
-}
-
 if (isset($_GET['id_service'])) {
     $id_service = (int)$_GET['id_service'];
 
     try {
-        // Query untuk mengambil detail service
+        // PERBAIKAN SQL:
+        // 1. Hapus d.model
+        // 2. Hapus d.kondisi_masuk (karena di form create tadi kita tidak input ini)
+        // 3. Tambahkan d.nama_perangkat
         $stmt = $pdo->prepare("
             SELECT 
                 s.id_service, 
                 s.keluhan, 
                 s.tanggal_masuk, 
                 s.tanggal_selesai, 
-                s.biaya_akhir,
+                s.biaya_service,
                 sp.nama_status, 
                 p.nama as nama_pelanggan, 
+                d.nama_perangkat,     -- Ganti model jadi nama_perangkat
                 d.jenis_perangkat, 
                 d.merek, 
-                d.model,
-                d.kondisi_masuk,
                 t.nama_teknisi as teknisi_penangan
             FROM service s
             JOIN status_perbaikan sp ON s.id_status = sp.id_status
             JOIN perangkat d ON s.id_perangkat = d.id_perangkat
-            JOIN pelanggan p ON d.id_pelanggan = p.id_pelanggan
+            JOIN pelanggan p ON s.id_pelanggan = p.id_pelanggan
             LEFT JOIN teknisi t ON s.id_teknisi = t.id_teknisi
             WHERE s.id_service = ?
         ");
@@ -58,7 +57,7 @@ if (isset($_GET['id_service'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Service - Service Elektronik ABC</title>
+    <title>Track Service Public</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../public/css/style.css">
@@ -80,12 +79,6 @@ if (isset($_GET['id_service'])) {
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
 
         body {
@@ -128,8 +121,6 @@ if (isset($_GET['id_service'])) {
         }
 
         .form-group { margin-bottom: 1.5rem; }
-        label { font-weight: 600; color: #475569; }
-
         .input-wrapper { display: flex; gap: 10px; }
 
         input[type="number"] {
@@ -138,12 +129,6 @@ if (isset($_GET['id_service'])) {
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             font-size: 1rem;
-        }
-
-        input[type="number"]:focus {
-            border-color: #23a6d5;
-            box-shadow: 0 0 0 3px rgba(35, 166, 213, 0.1);
-            outline: none;
         }
 
         button {
@@ -162,10 +147,11 @@ if (isset($_GET['id_service'])) {
             border-radius: 15px;
             animation: fadeIn 0.6s ease;
             border: 1px solid #e2e8f0;
+            overflow: hidden;
         }
 
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
+        th, td { padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; text-align: left;}
 
         .status-badge {
             padding: 0.25rem 0.75rem;
@@ -190,11 +176,11 @@ if (isset($_GET['id_service'])) {
             background-color: #fee2e2;
             color: #991b1b;
             border: 1px solid #fecaca;
-            animation: shake 0.5s ease;
         }
     </style>
 </head>
 <body>
+
 <div class="container">
 
     <h2>🔍 Track Status Service</h2>
@@ -202,7 +188,6 @@ if (isset($_GET['id_service'])) {
 
     <form method="GET">
         <div class="form-group">
-            <label for="id_service">Nomor ID Service</label>
             <div class="input-wrapper">
                 <input type="number" name="id_service" id="id_service"
                        placeholder="Contoh: 1024"
@@ -220,7 +205,7 @@ if (isset($_GET['id_service'])) {
 
     <?php elseif ($service): ?>
         <div class="service-details">
-            <h3>📋 Detail Service #<?= htmlspecialchars($service['id_service']) ?></h3>
+            <h3 style="padding: 1.5rem 1.5rem 0; margin:0;">📋 Detail Service #<?= htmlspecialchars($service['id_service']) ?></h3>
             <table>
                 <tr>
                     <th>Nama Pelanggan</th>
@@ -230,14 +215,11 @@ if (isset($_GET['id_service'])) {
                 <tr>
                     <th>Perangkat</th>
                     <td>
-                        <strong><?= htmlspecialchars($service['jenis_perangkat']) ?></strong>
-                        <?= htmlspecialchars($service['merek']) ?> - <?= htmlspecialchars($service['model']) ?>
+                        <strong><?= htmlspecialchars($service['nama_perangkat']) ?></strong><br>
+                        <span style="color: #666; font-size: 0.9em;">
+                            <?= htmlspecialchars($service['jenis_perangkat']) ?> - <?= htmlspecialchars($service['merek']) ?>
+                        </span>
                     </td>
-                </tr>
-
-                <tr>
-                    <th>Kondisi Masuk</th>
-                    <td><?= htmlspecialchars($service['kondisi_masuk']) ?></td>
                 </tr>
 
                 <tr>
@@ -251,8 +233,8 @@ if (isset($_GET['id_service'])) {
                         <?php 
                             $status_nama = strtolower($service['nama_status']);
                             $badge = "status-active";
-                            if (str_contains($status_nama, "selesai") || str_contains($status_nama, "completed")) $badge = "status-completed";
-                            elseif (str_contains($status_nama, "pending") || str_contains($status_nama, "menunggu")) $badge = "status-pending";
+                            if (strpos($status_nama, "selesai") !== false || strpos($status_nama, "completed") !== false) $badge = "status-completed";
+                            elseif (strpos($status_nama, "pending") !== false || strpos($status_nama, "menunggu") !== false) $badge = "status-pending";
                         ?>
                         <span class="status-badge <?= $badge ?>">
                             <?= htmlspecialchars($service['nama_status']) ?>
@@ -267,24 +249,26 @@ if (isset($_GET['id_service'])) {
 
                 <tr>
                     <th>Tanggal Masuk</th>
-                    <td><?= htmlspecialchars($service['tanggal_masuk']) ?></td>
+                    <td><?= date('d/m/Y', strtotime($service['tanggal_masuk'])) ?></td>
                 </tr>
 
                 <tr>
                     <th>Tanggal Selesai</th>
-                    <td><?= htmlspecialchars($service['tanggal_selesai'] ?? '-') ?></td>
+                    <td><?= $service['tanggal_selesai'] ? date('d/m/Y', strtotime($service['tanggal_selesai'])) : '-' ?></td>
                 </tr>
 
                 <tr>
                     <th>Estimasi Biaya</th>
-                    <td><strong>Rp <?= number_format($service['biaya_akhir'] ?? 0, 0, ',', '.') ?></strong></td>
+                    <td style="font-size: 1.1em; color: #28a745; font-weight: bold;">
+                        Rp <?= number_format($service['biaya_service'] ?? 0, 0, ',', '.') ?>
+                    </td>
                 </tr>
             </table>
         </div>
     <?php endif; ?>
 
     <div style="text-align: center; margin-top: 20px;">
-        <a href="../../public/index.php">← Kembali ke Beranda</a>
+        <a href="../../index.php" style="text-decoration: none; color: #333;">← Kembali ke Beranda</a>
     </div>
 
 </div>

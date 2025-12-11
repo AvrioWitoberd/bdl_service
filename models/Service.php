@@ -11,39 +11,37 @@ class Service
 
     public function create($id_perangkat, $id_teknisi, $id_admin, $id_pelanggan, $keluhan, $biaya_service = 0.00)
     {
-        try {
-            $this->pdo->beginTransaction();
+        // 1. Cari Status Default
+        $stmtStatus = $this->pdo->prepare("SELECT id_status FROM status_perbaikan WHERE nama_status = 'Menunggu Konfirmasi' LIMIT 1");
+        $stmtStatus->execute();
+        $status = $stmtStatus->fetchColumn();
 
-            // Default status = "Menunggu Konfirmasi"
-            $stmtStatus = $this->pdo->prepare("SELECT id_status FROM status_perbaikan WHERE nama_status = 'Menunggu Konfirmasi' LIMIT 1");
-            $stmtStatus->execute();
-            $status = $stmtStatus->fetchColumn();
-
-            // Jika status tidak ditemukan, ambil ID status pertama (fallback)
-            if (!$status) {
-                 $stmtStatus = $this->pdo->query("SELECT id_status FROM status_perbaikan LIMIT 1");
-                 $status = $stmtStatus->fetchColumn();
-            }
-
-            $stmt = $this->pdo->prepare("
-                INSERT INTO service 
-                (id_perangkat, id_teknisi, id_admin, id_pelanggan, id_status, tanggal_masuk, keluhan, biaya_service)
-                VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)
-            ");
-
-            $stmt->execute([$id_perangkat, $id_teknisi, $id_admin, $id_pelanggan, $status, $keluhan, $biaya_service]);
-            
-            // PostgreSQL/PDO method untuk ambil last insert ID
-            $newServiceId = $this->pdo->lastInsertId(); 
-
-            $this->pdo->commit();
-            return $newServiceId;
-
-        } catch (PDOException $e) {
-            $this->pdo->rollBack();
-            error_log("Create service failed: " . $e->getMessage());
-            return false;
+        // Fallback jika status tidak ada
+        if (!$status) {
+             $stmtStatus = $this->pdo->query("SELECT id_status FROM status_perbaikan LIMIT 1");
+             $status = $stmtStatus->fetchColumn();
         }
+
+        // 2. Insert Data
+        // Kita biarkan Exception melempar ke Controller jika gagal (JANGAN pakai try-catch disini)
+        $stmt = $this->pdo->prepare("
+            INSERT INTO service 
+            (id_perangkat, id_teknisi, id_admin, id_pelanggan, id_status, tanggal_masuk, keluhan, biaya_service)
+            VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)
+        ");
+
+        $stmt->execute([
+            $id_perangkat,
+            $id_teknisi,
+            $id_admin,
+            $id_pelanggan,
+            $status,
+            $keluhan,
+            $biaya_service
+        ]);
+
+        // 3. Kembalikan ID
+        return $this->pdo->lastInsertId();
     }
 
     public function delete($id) {
@@ -55,24 +53,28 @@ class Service
         return $stmt->execute([$id]);
     }
 
-    public function update($id, $id_teknisi, $keluhan, $biaya_service, $id_status) 
+    // Tambahkan parameter $id_admin di sini
+    public function update($id, $id_teknisi, $keluhan, $biaya_service, $id_status, $id_admin) 
     {
-        // Perhatikan urutan kolom di SQL ini:
+        // Kita tambahkan "id_admin = ?" di query update
         $stmt = $this->pdo->prepare("
             UPDATE service 
-            SET id_teknisi = ?,    -- [1]
-                keluhan = ?,       -- [2]
-                biaya_service = ?, -- [3]
-                id_status = ?      -- [4]
-            WHERE id_service = ?   -- [5]
+            SET id_teknisi = ?, 
+                keluhan = ?, 
+                biaya_service = ?, 
+                id_status = ?,
+                id_admin = ?       -- Update kolom admin
+            WHERE id_service = ?
         ");
 
+        // Masukkan data sesuai urutan tanda tanya (?)
         return $stmt->execute([
-            $id_teknisi,    // [1] Masuk ke id_teknisi
-            $keluhan,       // [2] Masuk ke keluhan
-            $biaya_service, // [3] Masuk ke biaya_service
-            $id_status,     // [4] Masuk ke id_status (JANGAN TERTUKAR)
-            $id             // [5] Masuk ke WHERE id_service
+            $id_teknisi,    
+            $keluhan,       
+            $biaya_service, 
+            $id_status,     
+            $id_admin,      // Masukkan ID Admin penanggung jawab
+            $id             
         ]);
     }
 

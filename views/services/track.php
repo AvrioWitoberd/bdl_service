@@ -48,7 +48,7 @@ $message = $message ?? '';
         <p><strong>Customer:</strong> <?php echo htmlspecialchars($service['nama_pelanggan']); ?></p>
         <p><strong>Device:</strong> <?php echo htmlspecialchars($service['jenis_perangkat']) . ' ' . htmlspecialchars($service['merek']) . ' ' . htmlspecialchars($service['model']); ?></p>
         <p><strong>Complaint:</strong> <?php echo htmlspecialchars($service['keluhan']); ?></p>
-        <p><strong>Estimated Cost:</strong> $<?php echo number_format($service['biaya_service'], 2); ?></p>
+        <p><strong>Estimated Cost:</strong> Rp<?php echo number_format($service['biaya_service'], 2); ?></p>
         <p><strong>Status:</strong> <?php echo htmlspecialchars($service['nama_status']); ?></p>
         <p><strong>Technician:</strong> <?php echo htmlspecialchars($service['nama_teknisi'] ?? 'Unassigned'); ?></p>
         <p><strong>Received:</strong> <?php echo $service['tanggal_masuk']; ?></p>
@@ -60,7 +60,7 @@ $message = $message ?? '';
     <?php if ($payment): ?>
         <div class="payment-details">
             <h3>Payment Details</h3>
-            <p><strong>Amount:</strong> $<?php echo number_format($payment['total_bayar'], 2); ?></p>
+            <p><strong>Amount:</strong> Rp<?php echo number_format($payment['total_bayar'], 2); ?></p>
             <p><strong>Method:</strong> <?php echo htmlspecialchars($payment['metode_bayar']); ?></p>
             <p><strong>Discount:</strong> <?php echo $payment['diskon']; ?>%</p>
             <p><strong>Status:</strong> <?php echo htmlspecialchars($payment['status_bayar']); ?></p>
