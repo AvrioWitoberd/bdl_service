@@ -15,3 +15,55 @@ a { color: #007bff; text-decoration: none; }
 a:hover { text-decoration: underline; }
 nav { margin-bottom: 20px; }
 nav a { margin-right: 15px; }
+
+:root {
+    --primary: #4361ee;
+    --success: #2ecc71;
+    --warning: #f1c40f;
+    --dark: #2d3436;
+}
+
+.report-header-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-left: 4px solid var(--primary);
+}
+
+.stat-card h3 { margin: 0; font-size: 14px; color: #636e72; text-transform: uppercase; }
+.stat-card .value { font-size: 24px; font-weight: bold; color: var(--dark); margin-top: 5px; }
+
+.card {
+    border: none;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card h2 {
+    background: #f8f9fa;
+    margin: 0;
+    padding: 15px 20px;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-container { padding: 10px 20px 20px; }
+
+code {
+    background: #f1f2f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #e83e8c;
+}
