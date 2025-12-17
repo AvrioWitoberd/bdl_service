@@ -20,27 +20,27 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
    Status selesai = '6,006'
    ================================ */
 
-// Service Pending
+// Service Pending (Yang statusnya BUKAN selesai/siap/diambil)
 $stmt = $pdo->prepare("
     SELECT COUNT(*) AS total
     FROM service
-    WHERE id_status <> (
+    WHERE id_status NOT IN (
         SELECT id_status 
         FROM status_perbaikan 
-        WHERE nama_status = 'Selesai Diperbaiki'
+        WHERE nama_status IN ('Selesai Diperbaiki', 'Siap Diambil', 'Diambil Pelanggan')
     )
 ");
 $stmt->execute();
 $pending_count = $stmt->fetch()['total'] ?? 0;
 
-// Service Selesai
+// Service Selesai (Yang statusnya ADALAH salah satu dari ketiga itu)
 $stmt = $pdo->prepare("
     SELECT COUNT(*) AS total
     FROM service
-    WHERE id_status = (
+    WHERE id_status IN (
         SELECT id_status 
         FROM status_perbaikan 
-        WHERE nama_status = 'Selesai Diperbaiki'
+        WHERE nama_status IN ('Selesai Diperbaiki', 'Siap Diambil', 'Diambil Pelanggan')
     )
 ");
 $stmt->execute();
@@ -90,19 +90,32 @@ $recent_services = $stmt->fetchAll();
     <title>Dashboard Admin - Service Elektronik ABC</title>
     <!-- 🔁 Ganti path CSS jadi sesuai struktur lo -->
     <link rel="stylesheet" href="../../public/css/style.css">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-box { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-        .stat-box h3 { margin: 0; color: #007bff; }
-        .stat-box p { font-size: 2rem; margin: 0.5rem 0; }
-        .recent-services { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .recent-services h3 { color: #007bff; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #f2f2f2; }
-    </style>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9f9; }
+            .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+            .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+            .stat-box { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+            .stat-box h3 { margin: 0; color: #007bff; }
+            .stat-box p { font-size: 2rem; margin: 0.5rem 0; }
+            .recent-services { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            .recent-services h3 { color: #007bff; }
+            table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+            th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
+
+            /* --- Badge Styles --- */
+            .badge { 
+                padding: 5px 10px; 
+                border-radius: 50px; 
+                font-size: 12px; 
+                color: white; 
+                background: #6c757d; 
+            }
+            .bg-success { background: #28a745; }
+            .bg-warning { background: #ffc107; color: #212529; }
+            .bg-info { background: #17a2b8; }
+            .bg-danger { background: #dc3545; } /* Tambahkan ini */
+        </style>
 </head>
 <body>
     <!-- 🔁 Ganti path include header jadi sesuai struktur lo -->
@@ -152,7 +165,22 @@ $recent_services = $stmt->fetchAll();
                         <?= htmlspecialchars($service['merek']) ?>
                         </td>
                         <td><?= htmlspecialchars($service['keluhan']) ?></td>
-                        <td><?= htmlspecialchars($service['nama_status']) ?></td>
+                       <td>
+                            <?php 
+                                // --- LOGIKA WARNA STATUS BARU ---
+                                $st = strtolower($service['nama_status']);
+                                $bg = 'bg-warning'; // Default: Menunggu/Hold
+                                
+                                if (strpos($st, 'selesai') !== false || strpos($st, 'ambil') !== false || strpos($st, 'siap') !== false) {
+                                    $bg = 'bg-success'; // Hijau: Selesai
+                                } elseif (strpos($st, 'proses') !== false || strpos($st, 'diagnosa') !== false || strpos($st, 'diterima') !== false || strpos($st, 'uji coba') !== false) {
+                                    $bg = 'bg-info'; // Biru Muda: Proses
+                                } elseif (strpos($st, 'batal') !== false) {
+                                    $bg = 'bg-danger'; // Merah: Dibatalkan
+                                }
+                            ?>
+                            <span class="badge <?= $bg ?>"><?= htmlspecialchars($service['nama_status']) ?></span>
+                        </td>
                         <td><?= htmlspecialchars($service['tanggal_masuk']) ?></td>
                     </tr>
                     <?php endforeach; ?>

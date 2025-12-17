@@ -121,10 +121,10 @@ $totalPages = ($totalPelanggan > 0) ? ceil($totalPelanggan / $limit) : 1;
                         <td><?= $p['id_pelanggan'] ?></td>
                         <td style="font-weight: 500;"><?= htmlspecialchars($p['nama']) ?></td>
                         <td>
-                            <div><?= htmlspecialchars($p['no_hp']) ?></div>
-                            <div style="font-size: 12px; color: #666;"><?= htmlspecialchars($p['email']) ?></div>
+                            <div><?= htmlspecialchars($p['no_hp'] ?? '-') ?></div>
+                            <div style="font-size: 12px; color: #666;"><?= htmlspecialchars($p['email'] ?? '-') ?></div>
                         </td>
-                        <td><?= htmlspecialchars($p['alamat']) ?></td>
+                        <td><?= htmlspecialchars($p['alamat'] ?? '-') ?></td>
                         <td><?= date('d/m/Y', strtotime($p['tanggal_daftar'])) ?></td>
                         
                         <?php if($role === 'admin'): ?>

@@ -9,24 +9,42 @@ class Teknisi
         $this->pdo = $pdo;
     }
 
-    public function getAll($limit = 10, $offset = 0, $search = '', $activeOnly = false)
-    {
+    public function getAll($limit = 10, $offset = 0, $search = '', $activeOnly = false) {
         $whereClause = ' WHERE 1=1 ';
         $params = [];
+        
+        // Filter Search
         if ($search) {
             $whereClause .= " AND (nama_teknisi ILIKE :search OR no_hp ILIKE :search OR email ILIKE :search)";
-            $params = [':search' => "%$search%"];
+            $params[':search'] = "%$search%";
         }
+        
+        // Filter Status Aktif
         if ($activeOnly) {
             $whereClause .= " AND status_aktif = TRUE";
         }
-        $sql = "SELECT id_teknisi, nama_teknisi, keahlian, no_hp, email, status_aktif FROM teknisi $whereClause ORDER BY nama_teknisi LIMIT :limit OFFSET :offset";
+
+        // Query dengan Function Database
+        $sql = "SELECT id_teknisi, nama_teknisi, keahlian, no_hp, email, status_aktif,
+                       fn_hitung_job_teknisi(id_teknisi) as total_job 
+                FROM teknisi 
+                $whereClause 
+                ORDER BY nama_teknisi 
+                LIMIT :limit OFFSET :offset";
+        
         $stmt = $this->pdo->prepare($sql);
+        
+        // === BAGIAN INI YANG HILANG SEBELUMNYA ===
+        // Binding Parameter Limit & Offset
         $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        
+        // Binding Parameter Search
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
+        // ==========================================
+
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -37,7 +55,7 @@ class Teknisi
         $params = [];
         if ($search) {
             $whereClause .= " AND (nama_teknisi ILIKE :search OR no_hp ILIKE :search OR email ILIKE :search)";
-            $params = [':search' => "%$search%"];
+            $params[':search'] = "%$search%";
         }
         if ($activeOnly) {
             $whereClause .= " AND status_aktif = TRUE";

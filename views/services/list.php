@@ -78,6 +78,7 @@ $totalPages = ($totalServices > 0) ? ceil($totalServices / $limit) : 1;
         .bg-success { background: #28a745; }
         .bg-warning { background: #ffc107; color: #212529; }
         .bg-info { background: #17a2b8; }
+        .bg-danger { background: #dc3545; } /* MERAH untuk Dibatalkan */
         .action-link { margin-right: 10px; text-decoration: none; font-weight: bold; }
         .text-blue { color: #007bff; }
         .text-red { color: #dc3545; }
@@ -161,9 +162,21 @@ $totalPages = ($totalServices > 0) ? ceil($totalServices / $limit) : 1;
                         <td>
                             <?php 
                                 $st = strtolower($s['nama_status']);
-                                $bg = 'bg-warning';
-                                if(strpos($st, 'selesai') !== false) $bg = 'bg-success';
-                                elseif(strpos($st, 'proses') !== false) $bg = 'bg-info';
+                                $bg = 'bg-warning'; // Default untuk status "menunggu" dan "hold"
+                                
+                                // Logika Status Selesai / Siap
+                                if (strpos($st, 'selesai') !== false || strpos($st, 'ambil') !== false || strpos($st, 'siap') !== false) {
+                                    $bg = 'bg-success'; // Hijau
+                                } 
+                                // Logika Status Dalam Proses / Pengecekan
+                                elseif (strpos($st, 'proses') !== false || strpos($st, 'diagnosa') !== false || strpos($st, 'diterima') !== false || strpos($st, 'uji coba') !== false) {
+                                    $bg = 'bg-info'; // Biru Muda
+                                }
+                                // Logika Status Dibatalkan
+                                elseif (strpos($st, 'batal') !== false) {
+                                    $bg = 'bg-danger'; // Merah
+                                }
+                                // Sisanya (Menunggu Konfirmasi, Menunggu Sparepart) akan default ke 'bg-warning'
                             ?>
                             <span class="badge <?= $bg ?>"><?= htmlspecialchars($s['nama_status']) ?></span>
                         </td>

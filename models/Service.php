@@ -192,5 +192,25 @@ class Service
         $stmt = $this->pdo->prepare("UPDATE service SET id_status = ?, keterangan = ?, catatan_internal = ? WHERE id_service = ?");
         return $stmt->execute([$statusId, $keterangan, $catatan_internal, $serviceId]);
     }
+
+    public function completeService($serviceId, $finalCost, $paymentMethod, $discount = 0.00)
+    {
+        try {
+            // PANGGIL STORED PROCEDURE DARI DATABASE
+            // Pastikan nama procedure sesuai dengan yang kamu buat (misal: sp_selesaikan_service)
+            $stmt = $this->pdo->prepare("CALL sp_selesaikan_service(?, ?, ?, ?)");
+            
+            return $stmt->execute([
+                $serviceId, 
+                $finalCost, 
+                $paymentMethod, 
+                $discount
+            ]);
+
+        } catch (Exception $e) {
+            error_log("Gagal memanggil SP: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

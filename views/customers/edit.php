@@ -40,13 +40,13 @@ $message = isset($_GET['msg']) ? $_GET['msg'] : '';
         <input type="text" id="nama" name="nama" value="<?php echo htmlspecialchars($pelanggan['nama']); ?>" required><br><br>
 
         <label for="no_hp">Phone:</label><br>
-        <input type="text" id="no_hp" name="no_hp" value="<?php echo htmlspecialchars($pelanggan['no_hp']); ?>" required><br><br>
+        <input type="text" id="no_hp" name="no_hp" value="<?php echo htmlspecialchars($pelanggan['no_hp'] ?? ''); ?>" required><br><br>
 
         <label for="alamat">Address:</label><br>
-        <textarea id="alamat" name="alamat"><?php echo htmlspecialchars($pelanggan['alamat']); ?></textarea><br><br>
+        <textarea id="alamat" name="alamat" required><?php echo htmlspecialchars($pelanggan['alamat'] ?? ''); ?></textarea><br><br>
 
         <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($pelanggan['email']); ?>" required><br><br>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($pelanggan['email'] ?? ''); ?>" required><br><br>
 
         <input type="submit" value="Update Customer">
     </form>

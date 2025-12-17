@@ -26,23 +26,40 @@ switch ($action) {
 
         $error_msg = '';
 
-        // Validasi Password
+        // 1. Validasi Password
         if ($password !== $confirm_password) {
-            $error_msg = 'Password and confirmation do not match.';
+            $error_msg = 'Password dan konfirmasi tidak cocok.';
         } 
-        // Coba Create
-        elseif ($pelangganModel->create($nama, $no_hp, $alamat, $email, $password)) {
-            // Sukses
-            header("Location: ../views/customers/list.php?msg=Customer created successfully");
-            exit;
-        } else {
-            // Gagal Query
-            $error_msg = 'Error creating customer.';
+        else {
+            // 2. Coba Create dengan Try-Catch
+            try {
+                $pelangganModel->create($nama, $no_hp, $alamat, $email, $password);
+                
+                // Kalau berhasil (gak ada error), redirect ke list
+                header("Location: ../views/customers/list.php?msg=Customer created successfully");
+                exit;
+
+            } catch (PDOException $e) {
+                // Menangkap error dari database
+                if ($e->getCode() == '23505') { // Kode error data duplikat
+                    // Cek apakah errornya karena no_hp atau email
+                    if (strpos($e->getMessage(), 'no_hp') !== false) {
+                        $error_msg = 'Nomor HP sudah terdaftar! Gunakan nomor lain.';
+                    } elseif (strpos($e->getMessage(), 'email') !== false) {
+                        $error_msg = 'Email sudah terdaftar!';
+                    } else {
+                        $error_msg = 'Data sudah ada (Duplikat).';
+                    }
+                } else {
+                    // Error database lain
+                    $error_msg = 'Terjadi kesalahan database: ' . $e->getMessage();
+                }
+            }
         }
 
         // === JIKA GAGAL: SIMPAN INPUT KE SESSION & REDIRECT ===
         if ($error_msg) {
-            $_SESSION['old_form'] = $_POST; // Simpan inputan biar gak ilang
+            $_SESSION['old_form'] = $_POST; // Simpan inputan biar gak perlu ngetik ulang
             header("Location: ../views/customers/create.php?error=" . urlencode($error_msg));
             exit;
         }

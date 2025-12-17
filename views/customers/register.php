@@ -9,11 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nama = trim($_POST['nama']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
-    $no_hp = trim($_POST['no_hp']);
+    $no_hp = trim($_POST['no_hp'] ?? '');
+    // === PERBAIKAN 1: Ambil data Alamat ===
+    $alamat = trim($_POST['alamat'] ?? ''); 
 
-    // Validasi sederhana
-    if (empty($nama) || empty($email) || empty($password)) {
-        $error = "Nama, email, dan password wajib diisi.";
+    // Validasi sederhana: Sekarang cek Nama, Email, Password, dan Alamat
+    if (empty($nama) || empty($email) || empty($password) || empty($alamat)) {
+        $error = "Nama, email, password, dan alamat wajib diisi.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Format email tidak valid.";
     } else {
@@ -27,8 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             // Insert ke database
-            $stmt = $pdo->prepare("INSERT INTO pelanggan (nama, email, password, no_hp) VALUES (?, ?, ?, ?)");
-            if ($stmt->execute([$nama, $email, $hashedPassword, $no_hp])) {
+            // === PERBAIKAN 2: Tambahkan kolom 'alamat' pada query INSERT ===
+            $stmt = $pdo->prepare("INSERT INTO pelanggan (nama, email, password, no_hp, alamat) VALUES (?, ?, ?, ?, ?)");
+            // === PERBAIKAN 3: Tambahkan $alamat pada execute ===
+            if ($stmt->execute([$nama, $email, $hashedPassword, $no_hp, $alamat])) {
                 $message = "Registrasi berhasil! Silakan login.";
             } else {
                 $error = "Gagal menyimpan data. Silakan coba lagi.";
@@ -112,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #666;
             margin-bottom: 2rem;
             font-size: 0.9rem;
+            
         }
 
         /* --- FORM ELEMENTS --- */
@@ -135,7 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        /* TAMBAHKAN TEXTAREA DI SINI AGAR STYLING-NYA SAMA */
+        textarea { 
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
@@ -144,9 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 0.95rem;
             background-color: #f8f9fa;
             transition: all 0.3s ease;
+            box-sizing: border-box; /* Penting untuk textarea */
         }
 
-        input:focus {
+        input:focus, 
+        textarea:focus { /* TAMBAHKAN TEXTAREA:FOCUS */
             border-color: #23a6d5;
             background-color: #fff;
             outline: none;
@@ -256,6 +265,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="email" id="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" placeholder="Cth: budi@example.com" required>
             </div>
             
+            <div class="form-group">
+                <label for="alamat">Alamat Lengkap</label>
+                <textarea id="alamat" name="alamat" rows="2" placeholder="Cth: Jl. Raya Kedung Kandang No. 10" required><?= htmlspecialchars($_POST['alamat'] ?? '') ?></textarea>
+            </div>
             <div class="form-group">
                 <label for="no_hp">No. HP (WhatsApp)</label>
                 <input type="text" id="no_hp" name="no_hp" value="<?= htmlspecialchars($_POST['no_hp'] ?? '') ?>" placeholder="Cth: 08123456789">

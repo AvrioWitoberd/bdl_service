@@ -19,11 +19,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $pelangganModel = new Pelanggan($pdo);
 
 // === AMBIL DATA DARI SESSION (JIKA ADA ERROR SEBELUMNYA) ===
-$message = $_GET['error'] ?? ''; // Ambil pesan error dari URL
+$message = $_SESSION['error_message'] ?? ''; // Ambil pesan error dari Session (Bukan GET)
 $old = $_SESSION['old_form'] ?? []; // Ambil data input lama
 
 // Bersihkan session agar form bersih saat refresh manual
 if (isset($_SESSION['old_form'])) unset($_SESSION['old_form']);
+if (isset($_SESSION['error_message'])) unset($_SESSION['error_message']);
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +55,7 @@ if (isset($_SESSION['old_form'])) unset($_SESSION['old_form']);
             <input type="text" id="no_hp" name="no_hp" value="<?php echo htmlspecialchars($old['no_hp'] ?? ''); ?>" required><br><br>
 
             <label for="alamat">Address:</label><br>
-            <textarea id="alamat" name="alamat"><?php echo htmlspecialchars($old['alamat'] ?? ''); ?></textarea><br><br>
+            <textarea id="alamat" name="alamat" required><?php echo htmlspecialchars($old['alamat'] ?? ''); ?></textarea><br><br>
 
             <label for="email">Email:</label><br>
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>" required><br><br>

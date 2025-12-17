@@ -21,7 +21,6 @@ if (!isset($_SESSION['user_id'])) {
             <a href="/bdl_service/views/spareparts/list.php" style="color: white; text-decoration: none; margin-left: 1rem;">⚙️ Spare Part</a>
             <a href="/bdl_service/views/services/list.php" style="color: white; text-decoration: none; margin-left: 1rem;">📋 Service</a>
             <a href="/bdl_service/views/reports/index.php" style="color: white; text-decoration: none; margin-left: 1rem;">📈 Laporan</a>
-            <a href="/bdl_service/views/database_features/performance.php" style="color: white; text-decoration: none; margin-left: 1rem;">💾 Fitur DB</a>
         <?php elseif ($_SESSION['role'] === 'pelanggan'): ?>
             <a href="/bdl_service/views/services/list.php" style="color: white; text-decoration: none; margin-left: 1rem;">📋 Service Saya</a>
         <?php elseif ($_SESSION['role'] === 'teknisi'): ?>

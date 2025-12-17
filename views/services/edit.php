@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label>Perangkat</label>
-                    <input type="text" value="<?= htmlspecialchars($service['nama_perangkat'] ?? '') ?> - <?= htmlspecialchars($service['merek'] ?? '') ?>" readonly>
+                    <input type="text" value="<?= htmlspecialchars($service['nama_perangkat'] ?? 'N/A') ?> - <?= htmlspecialchars($service['merek'] ?? 'N/A') ?>" readonly>
                 </div>
 
                 <div class="form-group">
