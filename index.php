@@ -8,7 +8,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Elektronik ABC - Perbaikan & Pemeliharaan Terpercaya</title>
+    <title>Service Elektronik Gacorr - Perbaikan & Pemeliharaan Terpercaya</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     

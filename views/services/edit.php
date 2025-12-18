@@ -1,166 +1,192 @@
 <?php
 // views/services/edit.php
 
-$pdo = require_once '../../config/database.php'; 
+// --- 1. LOGIKA PHP & DATA ---
+session_start();
+
+// Koneksi & Model
+// Sesuaikan path ini jika lokasi config/models berbeda
+require_once '../../config/database.php';
 require_once '../../models/Service.php';
 require_once '../../models/Teknisi.php';
 
-session_start();
-
-// Cek sesi
+// Cek Login (Backup jika di header belum tereksekusi)
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../auth/login.php");
+    header("Location: ../../auth/login.php");
     exit;
 }
 
-$role = $_SESSION['role']; // Ambil role user
-$userId = $_SESSION['user_id']; // ID User yang sedang login
+$role = $_SESSION['role']; 
+$userId = $_SESSION['user_id']; 
 
-// Cek Role: Hanya Admin & Teknisi boleh masuk
-if ($role === 'pelanggan') {
-    header("Location: list.php");
-    exit;
-}
-
+// Inisialisasi Model
 $serviceModel = new Service($pdo);
 $teknisiModel = new Teknisi($pdo);
 
-// Ambil ID dari URL
+// Ambil ID dari Parameter URL
 $id_service = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-// Ambil Data Service Lama
 $service = $serviceModel->getById($id_service);
 
+// Jika Data Tidak Ditemukan
 if (!$service) {
-    header("Location: list.php?msg=Data not found");
+    // Redirect kembali ke list
+    echo "<script>alert('Data service tidak ditemukan!'); window.location.href='list.php';</script>";
     exit;
 }
 
-// Ambil daftar teknisi & status
+// Ambil Data Referensi untuk Dropdown
 $teknisiList = $teknisiModel->getAll(100, 0, '', true);
 $stmtStatus = $pdo->query("SELECT * FROM status_perbaikan ORDER BY id_status ASC");
 $statusList = $stmtStatus->fetchAll();
 
-// --- PROSES UPDATE ---
+$error = '';
+
+// --- 2. PROSES UPDATE SAAT TOMBOL SIMPAN DITEKAN ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_teknisi = !empty($_POST['id_teknisi']) ? $_POST['id_teknisi'] : null;
-    $keluhan = $_POST['keluhan'];
-    $biaya = $_POST['biaya_service'];
-    $id_status = $_POST['id_status'];
+    $keluhan    = $_POST['keluhan'];
+    $biaya      = $_POST['biaya_service'];
+    $id_status  = $_POST['id_status'];
 
-    // === LOGIKA PENENTUAN ADMIN ===
+    // Mapping ID Admin (Khusus Admin yang login)
     if ($role === 'admin') {
-        // Jika yang ngedit ADMIN, otomatis catat "Saya yang bertanggung jawab sekarang"
-        $id_admin_to_save = $userId;
+        $mapAdmin = [ 1 => 8001, 2 => 8002 ]; 
+        if (isset($mapAdmin[$userId])) {
+            $id_admin_to_save = $mapAdmin[$userId];
+        } else {
+            $stmtDefault = $pdo->query("SELECT id_admin FROM admin ORDER BY id_admin ASC LIMIT 1");
+            $id_admin_to_save = $stmtDefault->fetchColumn();
+        }
     } else {
-        // Jika yang ngedit TEKNISI, jangan ubah admin penanggung jawab (pakai data lama)
+        // Teknisi tidak mengubah ID Admin pencatat
         $id_admin_to_save = $service['id_admin'];
     }
 
-    // Panggil fungsi update dengan parameter baru ($id_admin_to_save)
+    // Eksekusi Update
     if ($serviceModel->update($id_service, $id_teknisi, $keluhan, $biaya, $id_status, $id_admin_to_save)) {
-        header("Location: list.php?msg=Service updated successfully");
+        // Redirect Sukses
+        echo "<script>
+            alert('Data berhasil diperbarui!');
+            window.location.href = 'list.php';
+        </script>";
         exit;
     } else {
-        $error = "Gagal mengupdate data service.";
+        $error = "Gagal mengupdate database. Silakan coba lagi.";
     }
 }
+
+// --- 3. MULAI TAMPILAN (VIEW) ---
+
+// Panggil Header (Sidebar & Navbar ada di sini)
+require_once '../partials/header.php'; 
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Service</title>
-    <link rel="stylesheet" href="../../public/css/style.css">
-    <style>
-        .form-container { max-width: 600px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        input[type="text"], input[type="number"], textarea, select { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;}
-        .btn-submit { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-cancel { background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-left: 10px; }
-        
-        /* Style tambahan untuk input readonly agar terlihat jelas tidak bisa diedit */
-        input[readonly], select[disabled], textarea[readonly] {
-            background-color: #e9ecef;
-            cursor: not-allowed;
-            color: #6c757d;
-        }
-    </style>
-</head>
-<body>
-    <?php include '../partials/header.php'; ?>
-    
-    <div class="container">
-        <div class="form-container">
-            <h2>Edit Service #<?= $id_service ?></h2>
-            
-            <?php if(isset($error)): ?>
-                <p style="color:red;"><?= $error ?></p>
-            <?php endif; ?>
-
-            <form method="POST">
-                
-                <div class="form-group">
-                    <label>Pelanggan</label>
-                    <input type="text" value="<?= htmlspecialchars($service['nama_pelanggan']) ?>" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label>Perangkat</label>
-                    <input type="text" value="<?= htmlspecialchars($service['nama_perangkat'] ?? 'N/A') ?> - <?= htmlspecialchars($service['merek'] ?? 'N/A') ?>" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="keluhan">Keluhan / Kerusakan</label>
-                    <textarea name="keluhan" id="keluhan" rows="3" required><?= htmlspecialchars($service['keluhan']) ?></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_status">Status Pengerjaan</label>
-                    <select name="id_status" id="id_status" required>
-                        <?php foreach($statusList as $st): ?>
-                            <option value="<?= $st['id_status'] ?>" <?= ($st['id_status'] == $service['id_status']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($st['nama_status']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_teknisi">Teknisi Penanggung Jawab</label>
-                    
-                    <?php if ($role === 'admin'): ?>
-                        <select name="id_teknisi" id="id_teknisi">
-                            <option value="">-- Belum Ditunjuk --</option>
-                            <?php foreach($teknisiList as $t): ?>
-                                <option value="<?= $t['id_teknisi'] ?>" <?= ($t['id_teknisi'] == $service['id_teknisi']) ? 'selected' : '' ?>>
-                                    <?= $t['nama_teknisi'] ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    <?php else: ?>
-                        <input type="text" value="<?= htmlspecialchars($service['nama_teknisi'] ?? 'Belum Ditunjuk') ?>" readonly>
-                        <input type="hidden" name="id_teknisi" value="<?= $service['id_teknisi'] ?>">
-                    <?php endif; ?>
-                </div>
-
-                <div class="form-group">
-                    <label for="biaya_service">Estimasi Biaya</label>
-                    
-                    <?php if ($role === 'admin'): ?>
-                        <input type="number" name="biaya_service" id="biaya_service" value="<?= $service['biaya_service'] ?>">
-                    <?php else: ?>
-                        <input type="text" value="Rp <?= number_format($service['biaya_service'], 0, ',', '.') ?>" readonly>
-                        <input type="hidden" name="biaya_service" value="<?= $service['biaya_service'] ?>">
-                    <?php endif; ?>
-                </div>
-
-                <button type="submit" class="btn-submit">Simpan Perubahan</button>
-                <a href="list.php" class="btn-cancel">Batal</a>
-            </form>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <div>
+        <h4 class="mb-0 fw-bold text-dark">Edit Data Service</h4>
+        <small class="text-muted">ID: #<?= $id_service ?> | <?= htmlspecialchars($service['nama_pelanggan']) ?></small>
     </div>
-</body>
-</html>
+    <a href="list.php" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-arrow-left me-1"></i> Kembali
+    </a>
+</div>
+
+<?php if ($error): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i> <?= htmlspecialchars($error) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white mb-5">
+    <div class="card-body p-4">
+        <form method="POST">
+            <div class="row g-4">
+                
+                <div class="col-lg-5 border-end">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3 small">Data Masuk</h6>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Perangkat</label>
+                        <input type="text" class="form-control bg-light" value="<?= htmlspecialchars($service['nama_perangkat']) ?> - <?= htmlspecialchars($service['merek']) ?>" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Tanggal Masuk</label>
+                        <input type="text" class="form-control bg-light" value="<?= date('d M Y, H:i', strtotime($service['tanggal_masuk'])) ?>" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Keluhan Awal</label>
+                        <div class="p-3 bg-light rounded text-muted small fst-italic">
+                            "<?= htmlspecialchars($service['keluhan']) ?>"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 ps-lg-4">
+                    <h6 class="text-uppercase text-primary fw-bold mb-3 small">Update Pengerjaan</h6>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Detail Kerusakan / Catatan Teknisi</label>
+                        <textarea name="keluhan" class="form-control" rows="3" required><?= htmlspecialchars($service['keluhan']) ?></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Status Status</label>
+                            <select name="id_status" class="form-select border-primary" required>
+                                <?php foreach($statusList as $st): ?>
+                                    <option value="<?= $st['id_status'] ?>" <?= ($st['id_status'] == $service['id_status']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($st['nama_status']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Teknisi</label>
+                            <?php if ($role === 'admin'): ?>
+                                <select name="id_teknisi" class="form-select">
+                                    <option value="">-- Pilih Teknisi --</option>
+                                    <?php foreach($teknisiList as $t): ?>
+                                        <option value="<?= $t['id_teknisi'] ?>" <?= ($t['id_teknisi'] == $service['id_teknisi']) ? 'selected' : '' ?>>
+                                            <?= $t['nama_teknisi'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <input type="hidden" name="id_teknisi" value="<?= $service['id_teknisi'] ?>">
+                                <input type="text" class="form-control bg-light" value="<?= htmlspecialchars($service['nama_teknisi'] ?? '-') ?>" readonly>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Biaya Service (Rp)</label>
+                        <?php if ($role === 'admin'): ?>
+                            <input type="number" name="biaya_service" class="form-control" value="<?= $service['biaya_service'] ?>">
+                        <?php else: ?>
+                            <input type="hidden" name="biaya_service" value="<?= $service['biaya_service'] ?>">
+                            <input type="text" class="form-control bg-light" value="<?= number_format($service['biaya_service'], 0, ',', '.') ?>" readonly>
+                            <div class="form-text text-danger small">*Hanya admin yang dapat mengubah biaya.</div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="list.php" class="btn btn-light border">Batal</a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-1"></i> Simpan Perubahan
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php
+// Panggil Footer (Tutup container, load script JS)
+require_once '../partials/footer.php'; 
+?>

@@ -1,71 +1,52 @@
 <?php
 // controllers/ReportController.php
 
-// Load DB dan Model
-$pdo = require_once '../config/database.php';
+// 1. Hubungkan Database & Model
+require_once '../config/database.php';
 require_once '../models/Report.php';
-require_once '../models/DatabaseFeatures.php'; // Tambahkan model DB Features
 
-$reportModel = new Report($pdo);
-$dbFeaturesModel = new DatabaseFeatures($pdo); // Inisialisasi model DB Features
-
+// 2. Start Session
 session_start();
 
-// Proteksi Halaman Admin
+// 3. Cek Login Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../views/auth/login.php");
     exit;
 }
 
-// Handle Refresh Materialized View (tambahkan ini)
+// 4. Inisialisasi Model
+$reportModel = new Report($pdo);
+
+// 5. Logic Refresh MV
 $refreshMessage = '';
 $msgClass = '';
+
 if (isset($_GET['refresh_mv'])) {
-    if ($dbFeaturesModel->refreshMonthlyRevenueMV()) {
+    if ($reportModel->refreshMonthlyRevenueMV()) {
         $refreshMessage = '✅ Materialized View Berhasil Di-refresh!';
         $msgClass = 'success';
     } else {
-        $refreshMessage = '❌ Gagal me-refresh Materialized View.';
+        $refreshMessage = '❌ Gagal refresh MV (Pastikan MV sudah dibuat di Database).';
         $msgClass = 'error';
     }
 }
 
-// Mengambil Parameter Filter Tanggal (untuk laporan lama)
+// 6. Filter Tanggal
 $startDate = $_GET['start_date'] ?? null;
 $endDate = $_GET['end_date'] ?? null;
 $endDateForQuery = $endDate ? $endDate . ' 23:59:59' : null;
 
-// 1. Mengambil Laporan Statistik Status Service (lama)
+// 7. AMBIL DATA DARI MODEL
+// Bagian Laporan Standar
 $servicesByStatus = $reportModel->getServicesByStatusReport($startDate, $endDateForQuery);
-
-// 2. Mengambil Laporan Performa Teknisi (lama)
 $revenueByTech = $reportModel->getTechnicianPerformance($startDate, $endDateForQuery);
 
-// 3. Mengambil Data dari Materialized View (baru)
-$mvData = $dbFeaturesModel->getMonthlyRevenueMV();
+// Bagian Fitur Lanjutan
+$mvData = $reportModel->getMonthlyRevenueMV();
+$viewData = $reportModel->getServiceSummaryViewData(5); 
+$pendingServices = $reportModel->getPendingServicesSimple();
+$explainResults = $reportModel->getExplainAnalyzeResults();
 
-// 4. Mengambil Data dari Complex View (baru)
-$viewData = $dbFeaturesModel->getServiceSummaryViewData(5); // Ambil 5 terbaru
-
-// 5. Mengambil Data EXPLAIN ANALYZE (baru)
-$explainResults = $dbFeaturesModel->getExplainAnalyzeResults();
-
-// --- LOGIKA EXPORT (lama) ---
-if (isset($_GET['export'])) {
-    if ($_GET['export'] === 'services_by_status') {
-        $reportModel->exportToCSV($servicesByStatus, 'statistik_status_service.csv');
-    } elseif ($_GET['export'] === 'revenue_by_tech') {
-        $reportModel->exportToCSV($revenueByTech, 'performa_teknisi_report.csv');
-    }
-    // Bisa tambah export buat MV atau View nanti
-}
-
-// Kirim semua data ke view
-$refreshMessage = $refreshMessage;
-$msgClass = $msgClass;
-$mvData = $mvData;
-$viewData = $viewData;
-$explainResults = $explainResults;
-
-// Load View
+// 8. TAMPILKAN KE VIEW
 include '../views/reports/index.php';
+?>
